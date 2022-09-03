@@ -1,0 +1,15 @@
+[package]
+name = "image-server"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.63"
+image = "0.24.3"
+lazy_static = "1.4.0"
+rocket = { version = "0.5.0-rc.2", features = ["tls"] }
+serde = { version = "1.0.144", features = ["derive"] }
+tokio = { version = "1.21.0", features = ["fs"] }
+webp = "0.2.2"
