@@ -1,14 +1,14 @@
-use rocket::fs::{relative, FileServer};
-
 #[macro_use]
 extern crate rocket;
 mod convert_image;
+mod gen;
 mod routes;
+
+use routes::{default, internal_error, not_found};
 
 #[launch]
 fn rocket() -> _ {
-    let _ = convert_image::to_webp();
     rocket::build()
-        .mount("/", FileServer::from(relative!("static/index")))
-        .mount("/i", routes![routes::upload, routes::index])
+        .register("/", catchers![not_found, internal_error, default])
+        .mount("/", routes![routes::upload, routes::file])
 }
