@@ -45,8 +45,8 @@ This guide is intended for ubuntu server 20.04.
 `ln -s /etc/nginx/sites-available/your-domain.com.conf /etc/nginx/sites-enabled/`
 
 4. Generate certificates for your domain: `certbot --nginx`
-  - Choose the (sub)domains you want to generate certs for.
-  - Choose redirect (option 2) when prompted.
+    - Choose the (sub)domains you want to generate certs for.
+    - Choose redirect (option 2) when prompted.
   
 5. Reload nginx: `sudo systemctl reload nginx`
 
@@ -55,7 +55,7 @@ This guide is intended for ubuntu server 20.04.
 1. Go to www directory: `cd /var/www/`
 
 2. Clone repo: `git clone https://gitlab.com/mWalrus/image-server`
-  - make sure the cloned directory is owned by www-data (`sudo chown www-data: image-server/`)
+    - make sure the cloned directory is owned by www-data (`sudo chown www-data: image-server/`)
 
 3. Enter the cloned directory: `cd image-server`
 
