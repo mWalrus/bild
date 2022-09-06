@@ -13,7 +13,7 @@ Use at your own risk :-)
 ## Pre-requisites
 This guide is intended for ubuntu server 20.04.
 
-<ins>__NOTE__: replace all occurrences of `your-domain.com` should be replaced with your actual domain name.</ins>
+<ins>__NOTE__: replace all occurrences of `your-domain.com` with your actual domain name.</ins>
 ### List of programs that needs to be installed:
 - `nginx`
 - `certbot` and `python3-certbot-nginx`
