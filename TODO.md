@@ -3,7 +3,7 @@
 - [ ] authentication (maybe)
 - [ ] image handling in separate thread
 - [x] read url from env (or arguments (another dependency :/ (could do manual parsing)))
-- [ ] install instructions
+- [x] install instructions
 - [ ] limit to image files
   - [ ] jpg
   - [ ] png
