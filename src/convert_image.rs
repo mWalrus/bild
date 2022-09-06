@@ -1,9 +1,9 @@
 use crate::gen;
 use image::io::Reader;
 use image::DynamicImage;
-use std::fs::File;
 use std::io::Write;
 use std::path::Path;
+use std::{fs::File, path::PathBuf};
 use webp::{Encoder, WebPMemory};
 
 pub fn to_webp(path: &str) -> Option<String> {
@@ -19,10 +19,14 @@ pub fn to_webp(path: &str) -> Option<String> {
     let webp_file_name = gen::file_name();
 
     // Put webp-image in a separate webp-folder in the location of the original
-    let path: &Path = &Path::new("static/uploads/").join(&webp_file_name);
+    let mut webp_file_path: PathBuf = PathBuf::from("static/uploads/").join(&webp_file_name);
+
+    if webp_file_path.exists() {
+        webp_file_path = webp_file_path.with_file_name(gen::file_name());
+    }
 
     // Create the parent directory if it doesn't exist
-    let parent_directory: &Path = path.parent().unwrap();
+    let parent_directory: &Path = webp_file_path.parent().unwrap();
     match std::fs::create_dir_all(parent_directory) {
         Ok(_) => {}
         Err(e) => {
@@ -30,13 +34,6 @@ pub fn to_webp(path: &str) -> Option<String> {
             return None;
         }
     }
-
-    // Create the new file path
-    let original_filename = path.file_stem().unwrap().to_str().unwrap();
-    let webp_file_path = format!(
-        "{}/{original_filename}.webp",
-        parent_directory.to_str().unwrap()
-    );
 
     // Create the image file
     let mut webp_image = File::create(&webp_file_path).unwrap();
