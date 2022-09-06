@@ -67,7 +67,7 @@ This guide is intended for ubuntu server 20.04.
 2. Edit the file and add the following:
 ```
 [Unit]
-Description=My Rocket application for your-domain.tld
+Description=My Rocket application for your-domain.com
 
 [Service]
 User=www-data
