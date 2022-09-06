@@ -10,5 +10,5 @@ use routes::{default, internal_error, not_found};
 fn rocket() -> _ {
     rocket::build()
         .register("/", catchers![not_found, internal_error, default])
-        .mount("/", routes![routes::upload, routes::file])
+        .mount("/i", routes![routes::upload, routes::file])
 }
