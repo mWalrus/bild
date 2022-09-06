@@ -3,10 +3,8 @@ use rocket::form::Form;
 use rocket::fs::NamedFile;
 use rocket::fs::TempFile;
 use rocket::http::Status;
-use rocket::response::content;
-use rocket::response::status;
-use rocket::serde::json::json;
-use rocket::serde::json::Value;
+use rocket::response::{content, status};
+use rocket::serde::json::{json, Value};
 use rocket::Request;
 use std::path::{Path, PathBuf};
 
@@ -43,8 +41,12 @@ pub async fn file(file: PathBuf) -> Option<NamedFile> {
 pub async fn upload(mut file: Form<TempFile<'_>>) -> status::Custom<Value> {
     let tmp_file_path = format!("/tmp/{}.png", gen::file_name());
     file.persist_to(&tmp_file_path).await.unwrap();
+    // FIXME: handle image conversion in separate thread
     if let Some(file_name) = convert_image::to_webp(&tmp_file_path) {
-        let url = format!("http://localhost:8000/i/{file_name}");
+        let url = format!(
+            "{}/i/{file_name}",
+            std::env::var("ROCKET_SERVER_URL").unwrap_or("http://localhost:8000".to_string())
+        );
         return status::Custom(Status::Ok, json!({ "url": url }));
     }
     status::Custom(
