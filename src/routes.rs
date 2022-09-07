@@ -39,7 +39,7 @@ pub async fn file(file: PathBuf) -> Option<NamedFile> {
 
 #[post("/upload", data = "<file>")]
 pub async fn upload(mut file: Form<TempFile<'_>>) -> status::Custom<Value> {
-    let tmp_file_path = format!("/tmp/{}.png", gen::file_name());
+    let tmp_file_path = format!("/tmp/{}", gen::file_name(false));
     file.persist_to(&tmp_file_path).await.unwrap();
     // FIXME: handle image conversion in separate thread
     if let Some(file_name) = convert_image::to_webp(&tmp_file_path) {
