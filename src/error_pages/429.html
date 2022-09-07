@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+  <head> 
+    <title>Too Many Requests</title>
+    <style>
+      :root {
+        --bg: #3B4252;
+        --header-error: #BF616A;
+        --normal-fg: #D8DEE9;
+      }
+      body {
+        background-color: var(--bg);
+        font-family: sans-serif
+      }
+      .wrapper {
+        position: absolute;
+        width: 50%;
+        left: 25%;
+        text-align: center;
+        bottom: 50%;
+      }
+      
+      .title {
+        color: var(--header-error);
+        font-size: 4em;
+      }
+      
+      .message {
+        color: var(--normal-fg);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <h1 class="title">429</h1>
+      <p class="message">Too many requests</p>
+    </div>
+  </body>
+</html>

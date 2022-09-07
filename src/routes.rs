@@ -6,7 +6,20 @@ use rocket::http::Status;
 use rocket::response::{content, status};
 use rocket::serde::json::{json, Value};
 use rocket::Request;
+use rocket_governor::{Method, Quota, RocketGovernable, RocketGovernor};
 use std::path::{Path, PathBuf};
+
+pub struct RateLimitGuard;
+
+impl<'r> RocketGovernable<'r> for RateLimitGuard {
+    fn quota(_method: Method, _route_name: &str) -> Quota {
+        let rate_limit: u32 = std::env::var("ROCKET_RATE_LIMIT")
+            .unwrap_or("2".to_string())
+            .parse()
+            .unwrap();
+        Quota::per_second(Self::nonzero(rate_limit))
+    }
+}
 
 #[catch(404)]
 pub fn not_found() -> content::RawHtml<String> {
@@ -15,6 +28,11 @@ pub fn not_found() -> content::RawHtml<String> {
 #[catch(500)]
 pub fn internal_error() -> content::RawHtml<String> {
     content::RawHtml(include_str!("error_pages/500.html").to_string())
+}
+
+#[catch(429)]
+pub fn too_many_requests() -> content::RawHtml<String> {
+    content::RawHtml(include_str!("error_pages/429.html").to_string())
 }
 
 #[catch(default)]
@@ -38,7 +56,10 @@ pub async fn file(file: PathBuf) -> Option<NamedFile> {
 }
 
 #[post("/upload", data = "<file>")]
-pub async fn upload(mut file: Form<TempFile<'_>>) -> status::Custom<Value> {
+pub async fn upload(
+    mut file: Form<TempFile<'_>>,
+    _lg: RocketGovernor<'_, RateLimitGuard>,
+) -> status::Custom<Value> {
     let tmp_file_path = format!("/tmp/{}", gen::file_name(false));
     file.persist_to(&tmp_file_path).await.unwrap();
     // FIXME: handle image conversion in separate thread
