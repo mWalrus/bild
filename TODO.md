@@ -1,7 +1,7 @@
 # TODO
 - [ ] file size limitations
 - [ ] authentication (maybe)
-- [ ] image handling in separate thread
+- [ ] image handling in separate thread (maybe)
 - [x] read url from env (or arguments (another dependency :/ (could do manual parsing)))
 - [x] install instructions
 - [ ] limit to image files
@@ -9,6 +9,6 @@
   - [ ] png
   - [ ] gif
 - [x] check if new file name is unique
-- [ ] rate limitations
+- [x] rate limitations
 - [ ] security
 - [ ] delete files

@@ -7,7 +7,7 @@ The server is made using [rocket](https://rocket.rs) and
 ## Disclaimer
 This is a young project and im working out the details as I go since I didn't
 really have a plan when starting this.
-What I'm trying to say is:<br>
+<br>What I'm trying to say is:<br>
 Use at your own risk :-)
 
 ## Pre-requisites
@@ -64,7 +64,8 @@ This guide is intended for ubuntu server 20.04.
 ### Systemd service
 1. Create service file: `touch /etc/systemd/system/your-domain.com.service`
 
-2. Edit the file and add the following:
+2. Edit the file and add the following:<br>
+<ins>__NOTE__: The `ROCKET_RATE_LIMIT` environment variable is optional, if you omit this variable it will default to allow two (2) requests per second.</ins>
 ```
 [Unit]
 Description=My Rocket application for your-domain.com
@@ -79,6 +80,8 @@ Environment="ROCKET_ADDRESS=127.0.0.1"
 Environment="ROCKET_PORT=1337"
 Environment="ROCKET_LOG=critical"
 Environment="ROCKET_SERVER_URL=https://your-domain.com"
+# Optional environment variable
+# Environment="ROCKET_RATE_LIMIT=2" # default is 2
 ExecStart=/var/www/image-server/target/release/image-server
 
 [Install]
@@ -86,3 +89,5 @@ WantedBy=multi-user.target
 ```
 
 3. Start and enable the service: `sudo systemctl start your-domain.com.service && sudo systemctl enable your-domain.com.service`
+
+Done! :)
