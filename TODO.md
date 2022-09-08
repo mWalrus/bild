@@ -12,3 +12,4 @@
 - [x] rate limitations
 - [ ] security
 - [ ] delete files
+- [ ] install script
