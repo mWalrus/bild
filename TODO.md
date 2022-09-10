@@ -13,3 +13,4 @@
 - [ ] security
 - [ ] delete files
 - [ ] install script
+- [ ] Performance testing
