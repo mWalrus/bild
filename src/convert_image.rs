@@ -16,13 +16,14 @@ pub fn to_webp(path: &str) -> Option<String> {
     let encoded_webp: WebPMemory = encoder.encode(90f32);
 
     // Generate a unique file name for the new converted file
-    let webp_file_name = gen::file_name(true);
+    let mut webp_file_name = gen::file_name(".webp");
 
     // Put webp-image in a separate webp-folder in the location of the original
     let mut webp_file_path: PathBuf = PathBuf::from("static/uploads/").join(&webp_file_name);
 
     if webp_file_path.exists() {
-        webp_file_path = webp_file_path.with_file_name(gen::file_name(true));
+        webp_file_name = gen::file_name(".webp");
+        webp_file_path = webp_file_path.with_file_name(&webp_file_name);
     }
 
     // Create the parent directory if it doesn't exist
@@ -40,10 +41,10 @@ pub fn to_webp(path: &str) -> Option<String> {
 
     // Write to file
     match webp_image.write_all(&encoded_webp) {
-        Ok(_) => return Some(webp_file_name.replace(".webp", "")),
+        Ok(_) => Some(webp_file_name),
         Err(e) => {
             println!("Error: {e}");
-            return None;
+            None
         }
     }
 }
