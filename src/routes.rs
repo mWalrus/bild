@@ -1,7 +1,7 @@
 use crate::{convert_image, gen};
+use lazy_static::lazy_static;
 use rocket::form::Form;
-use rocket::fs::NamedFile;
-use rocket::fs::TempFile;
+use rocket::fs::{NamedFile, TempFile};
 use rocket::http::Status;
 use rocket::response::{content, status};
 use rocket::serde::json::{json, Value};
@@ -11,13 +11,18 @@ use std::path::{Path, PathBuf};
 
 pub struct RateLimitGuard;
 
+lazy_static! {
+    static ref RATE_LIMIT: u32 = std::env::var("ROCKET_RATE_LIMIT")
+        .unwrap_or_else(|_| "2".into())
+        .parse()
+        .unwrap();
+    static ref SERVER_URL: String =
+        std::env::var("ROCKET_SERVER_URL").unwrap_or_else(|_| "http://localhost:1337".to_string());
+}
+
 impl<'r> RocketGovernable<'r> for RateLimitGuard {
     fn quota(_method: Method, _route_name: &str) -> Quota {
-        let rate_limit: u32 = std::env::var("ROCKET_RATE_LIMIT")
-            .unwrap_or("2".to_string())
-            .parse()
-            .unwrap();
-        Quota::per_second(Self::nonzero(rate_limit))
+        Quota::per_second(Self::nonzero(*RATE_LIMIT))
     }
 }
 
@@ -49,10 +54,10 @@ pub async fn file(file: PathBuf) -> Option<NamedFile> {
     if file_path.extension().is_none() {
         file_path = file_path.with_extension("webp");
     }
-    if file_path.exists() {
-        return NamedFile::open(file_path).await.ok();
+    if !file_path.exists() {
+        return None;
     }
-    None
+    NamedFile::open(file_path).await.ok()
 }
 
 #[post("/upload", data = "<file>")]
@@ -60,14 +65,11 @@ pub async fn upload(
     mut file: Form<TempFile<'_>>,
     _lg: RocketGovernor<'_, RateLimitGuard>,
 ) -> status::Custom<Value> {
-    let tmp_file_path = format!("/tmp/{}", gen::file_name(false));
+    let tmp_file_path = format!("/tmp/{}", gen::file_name(".png"));
     file.persist_to(&tmp_file_path).await.unwrap();
     // FIXME: handle image conversion in separate thread
     if let Some(file_name) = convert_image::to_webp(&tmp_file_path) {
-        let url = format!(
-            "{}/i/{file_name}",
-            std::env::var("ROCKET_SERVER_URL").unwrap_or("http://localhost:8000".to_string())
-        );
+        let url = format!("{}/i/{file_name}", *SERVER_URL);
         return status::Custom(Status::Ok, json!({ "url": url }));
     }
     status::Custom(
