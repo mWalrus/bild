@@ -41,7 +41,7 @@ pub fn to_webp(path: &str) -> Option<String> {
 
     // Write to file
     match webp_image.write_all(&encoded_webp) {
-        Ok(_) => Some(webp_file_name),
+        Ok(_) => Some(webp_file_name.replace(".webp", "")),
         Err(e) => {
             println!("Error: {e}");
             None
