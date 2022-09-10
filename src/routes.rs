@@ -48,9 +48,6 @@ pub fn default(status: Status, req: &Request) -> String {
 #[get("/<file..>")]
 pub async fn file(file: PathBuf) -> Option<NamedFile> {
     let mut file_path = Path::new("static/uploads/").join(file);
-    // sometimes the user might open the image without
-    // the file extension present, in that case we want
-    // to redirect the user to the file.
     if file_path.extension().is_none() {
         file_path = file_path.with_extension("webp");
     }
