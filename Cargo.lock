@@ -765,6 +765,7 @@ name = "image-server"
 version = "0.1.0"
 dependencies = [
  "image",
+ "lazy_static",
  "rand",
  "rocket",
  "rocket-governor",
