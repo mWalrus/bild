@@ -90,4 +90,11 @@ WantedBy=multi-user.target
 
 3. Start and enable the service: `sudo systemctl start your-domain.com.service && sudo systemctl enable your-domain.com.service`
 
+### Chatterino setup
+In chatterino settings -> External tools -> Image Uploader, enter in the following:
+
+- Request URL: `https://<your-domain.com>/i/upload`
+- Form field: `data`
+- Image link: `{url}`
+
 Done! :)
