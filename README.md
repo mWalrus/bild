@@ -24,6 +24,10 @@ This guide is intended for ubuntu server 20.04.
 - Start nginx if not running (check status with `sudo systemctl status nginx`): `sudo systemctl start nginx && sudo systemctl enable nginx`
 - Set rustup to nightly toolchain: `rustup default nightly`
 
+## Paths
+- `https://your-domain.com/i/<IMAGE_FILE_NAME>`: Gets an image on the server with the specified name.
+- `https://your-domain.com/i/latest`: Gets the last uploaded file on the server.
+
 ## Install Steps
 
 ### Nginx config
@@ -93,7 +97,7 @@ WantedBy=multi-user.target
 ### Chatterino setup
 In chatterino settings -> External tools -> Image Uploader, enter in the following:
 
-- Request URL: `https://<your-domain.com>/i/upload`
+- Request URL: `https://your-domain.com/i/upload`
 - Form field: `data`
 - Image link: `{url}`
 
