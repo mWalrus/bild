@@ -75,10 +75,12 @@ The `auth` tool also produces the header string which can be added to chatterino
 
 1. Run auth: `./target/release/auth`
 
+Copy the `Authorization: Bearer XXXXXXXXXXXXXX` it outputs.
+
 Thats it for authentication!
 
 ### Systemd service
-1. Create service file: `touch /etc/systemd/system/your-domain.com.service`
+1. Create service file: `touch /etc/systemd/system/image-server.service`
 
 2. Edit the file and add the following:<br>
 <ins>__NOTE__: The `ROCKET_RATE_LIMIT` environment variable is optional, if you omit this variable it will default to allow two (2) requests per second.</ins>
@@ -104,13 +106,14 @@ ExecStart=/var/www/image-server/target/release/image-server
 WantedBy=multi-user.target
 ```
 
-3. Start and enable the service: `sudo systemctl start your-domain.com.service && sudo systemctl enable your-domain.com.service`
+3. Start and enable the service: `sudo systemctl start image-server.service && sudo systemctl enable image-server.service`
 
 ### Chatterino setup
 In chatterino settings -> External tools -> Image Uploader, enter in the following:
 
 - Request URL: `https://your-domain.com/i/upload`
 - Form field: `data`
+- Extra Headers: <authorization header from `auth` you copied earlier>
 - Image link: `{url}`
 
 Done! :)
