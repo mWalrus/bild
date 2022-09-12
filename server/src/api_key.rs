@@ -19,12 +19,8 @@ impl<'a> FromRequest<'a> for ApiKey<'a> {
     type Error = ApiKeyError;
 
     async fn from_request(req: &'a Request<'_>) -> Outcome<Self, Self::Error> {
-        /* .. */
         fn is_valid(key: &str) -> bool {
-            let key_on_disk = fs::read_to_string("/etc/image-server/auth.key").unwrap();
-            let key = key.replace("Bearer ", "");
-            println!("keys are equal: {}", key_on_disk == key);
-            key == key_on_disk
+            key.replace("Bearer ", "") == fs::read_to_string("/etc/image-server/auth.key").unwrap()
         }
 
         match req.headers().get_one("Authorization") {
