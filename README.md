@@ -112,7 +112,7 @@ In chatterino settings -> External tools -> Image Uploader, enter in the followi
 
 - Request URL: `https://your-domain.com/i/upload`
 - Form field: `data`
-- Extra Headers: <authorization header from `auth` you copied earlier>
+- Extra Headers: `Authorization: Bearer XXXXXXXXXXXXXX` (replace this with the output from `auth`)
 - Image link: `{url}`
 
 Done! :)
