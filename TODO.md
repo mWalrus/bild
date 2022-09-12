@@ -1,6 +1,6 @@
 # TODO
 - [ ] file size limitations
-- [ ] authentication (maybe)
+- [x] authentication
 - [ ] image handling in separate thread (maybe)
 - [x] read url from env (or arguments (another dependency :/ (could do manual parsing)))
 - [x] install instructions
