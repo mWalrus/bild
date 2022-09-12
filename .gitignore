@@ -1,3 +1,5 @@
+/server/target
+/server/static/uploads
+/server/performance
 /target
-/static/uploads
-/performance
+/auth/target
