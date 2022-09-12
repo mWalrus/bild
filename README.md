@@ -24,7 +24,7 @@ This guide is intended for ubuntu server 20.04.
 - Start nginx if not running (check status with `sudo systemctl status nginx`): `sudo systemctl start nginx && sudo systemctl enable nginx`
 - Set rustup to nightly toolchain: `rustup default nightly`
 
-## Paths
+## Publically Available Paths
 - `https://your-domain.com/i/<IMAGE_FILE_NAME>`: Gets an image on the server with the specified name.
 - `https://your-domain.com/i/latest`: Gets the last uploaded file on the server.
 
@@ -64,6 +64,18 @@ This guide is intended for ubuntu server 20.04.
 3. Enter the cloned directory: `cd image-server`
 
 4. Compile: `rustup run nightly cargo build --release`
+    - This will create two binaries, `auth` and `image-server`. `auth` will be explained in the next section.
+
+### Authentication
+__Note__: Make sure you have compiled as described in the step above.
+
+The auth binary created is a small helper program to generate a secure token for authentication.
+This token is saved to `/etc/image-server/auth.key` which will be read by image-server when it's running.
+The `auth` tool also produces the header string which can be added to chatterino later when setting up the uploader. 
+
+1. Run auth: `./target/release/auth`
+
+Thats it for authentication!
 
 ### Systemd service
 1. Create service file: `touch /etc/systemd/system/your-domain.com.service`
