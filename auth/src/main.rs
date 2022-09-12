@@ -7,8 +7,8 @@ use std::io::{self, Write};
 use std::path::PathBuf;
 
 static CFG_PATH: &str = "/etc/image-server/";
+static KEY_FILE: &str = "auth.key";
 
-#[derive(Serialize)]
 struct Auth {
     token: String,
 }
@@ -24,16 +24,12 @@ impl Auth {
     }
 
     fn persist(&self) -> Result<(), io::Error> {
-        let toml = toml::to_string(&self).unwrap();
-
         let path = PathBuf::from(CFG_PATH);
         if !path.exists() {
             create_dir_all(&path)?;
         }
 
-        let mut file = File::create(path.join("auth.toml"))?;
-
-        file.write_all(toml.as_ref())?;
+        File::create(path.join(KEY_FILE))?.write_all(self.token.as_ref())?;
         Ok(())
     }
 }
@@ -50,10 +46,9 @@ fn main() -> Result<(), io::Error> {
             .bold()
     );
 
-    println!(
-        "{}",
-        "It has also been saved to /etc/image-server/auth.toml".bright_black()
-    );
+    let hint = format!("The token has also been saved to {CFG_PATH}{KEY_FILE}");
+
+    println!("{}", hint.bright_black());
 
     Ok(())
 }

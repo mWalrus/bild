@@ -9,5 +9,3 @@ edition = "2021"
 colored = "2.0.0"
 rand = { version = "0.8.5", features = ["std_rng"] }
 serde = { version = "1.0.144", features = ["derive"] }
-toml = "0.5.9"
-
