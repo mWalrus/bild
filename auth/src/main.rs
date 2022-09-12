@@ -1,7 +1,6 @@
 use colored::*;
 use rand::distributions::Alphanumeric;
 use rand::{thread_rng, Rng};
-use serde::Serialize;
 use std::fs::{create_dir_all, File};
 use std::io::{self, Write};
 use std::path::PathBuf;

@@ -9,7 +9,6 @@ use rocket::serde::json::{json, Value};
 use rocket::Request;
 use rocket_governor::{Method, Quota, RocketGovernable, RocketGovernor};
 use std::path::{Path, PathBuf};
-use std::{fs, io};
 
 pub struct RateLimitGuard;
 
