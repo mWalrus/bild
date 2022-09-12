@@ -1,3 +1,4 @@
+use crate::api_key::ApiKey;
 use crate::{convert_image, gen};
 use lazy_static::lazy_static;
 use rocket::form::Form;
@@ -80,6 +81,7 @@ pub async fn file(file: PathBuf) -> Option<NamedFile> {
 pub async fn upload(
     mut file: Form<TempFile<'_>>,
     _lg: RocketGovernor<'_, RateLimitGuard>,
+    _key: ApiKey<'_>,
 ) -> status::Custom<Value> {
     let tmp_file_path = format!("/tmp/{}", gen::file_name(".png"));
     file.persist_to(&tmp_file_path).await.unwrap();

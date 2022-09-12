@@ -111,7 +111,6 @@ dependencies = [
  "colored",
  "rand",
  "serde",
- "toml",
 ]
 
 [[package]]
