@@ -26,7 +26,6 @@ This guide is intended for ubuntu server 20.04.
 
 ## Publically Available Paths
 - `https://your-domain.com/i/<IMAGE_FILE_NAME>`: Gets an image on the server with the specified name.
-- `https://your-domain.com/i/latest`: Gets the last uploaded file on the server.
 
 ## Install Steps
 

@@ -14,5 +14,5 @@ fn rocket() -> _ {
             "/",
             catchers![not_found, internal_error, too_many_requests, default],
         )
-        .mount("/i", routes![routes::upload, routes::file, routes::latest])
+        .mount("/i", routes![routes::upload, routes::file])
 }

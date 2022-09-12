@@ -47,24 +47,6 @@ pub fn default(status: Status, req: &Request) -> String {
     format!("Something went wrong: {status} ({})", req.uri())
 }
 
-#[get("/latest")]
-pub async fn latest() -> Result<NamedFile, io::Error> {
-    let mut latest_file: Option<NamedFile> = None;
-    for entry in fs::read_dir("static/uploads")? {
-        let entry = entry?;
-        let modified = &entry.metadata()?.modified()?;
-        if let Some(lf) = &latest_file {
-            let lf_modified = &lf.metadata().await?.modified()?;
-            if modified > lf_modified {
-                latest_file = NamedFile::open(entry.path()).await.ok();
-            }
-        } else {
-            latest_file = NamedFile::open(entry.path()).await.ok();
-        }
-    }
-    Ok(latest_file.unwrap())
-}
-
 #[get("/<file..>")]
 pub async fn file(file: PathBuf) -> Option<NamedFile> {
     let mut file_path = Path::new("static/uploads/").join(file);
