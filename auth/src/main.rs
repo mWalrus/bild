@@ -5,7 +5,7 @@ use std::fs::{create_dir_all, File};
 use std::io::{self, Write};
 use std::path::PathBuf;
 
-static CFG_PATH: &str = "/etc/image-server/";
+static CFG_PATH: &str = "/etc/bild-server/";
 static KEY_FILE: &str = "auth.key";
 
 struct Auth {

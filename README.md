@@ -1,6 +1,5 @@
-# Image Server - An image uploader for chatterino
+# Bild - A small image uploader and server
 
-A small image uploader and hoster written in rust.
 The server is made using [rocket](https://rocket.rs) and
 [image](https://github.com/image-rs/image) is used for image conversion to webp.
 
@@ -57,29 +56,29 @@ This guide is intended for ubuntu server 20.04.
 ### Compiling
 1. Go to www directory: `cd /var/www/`
 
-2. Clone repo: `git clone https://gitlab.com/mWalrus/image-server`
-    - make sure the cloned directory is owned by www-data (`sudo chown www-data: image-server/`)
+2. Clone repo: `git clone https://gitlab.com/mWalrus/bild.git`
+    - make sure the cloned directory is owned by www-data (`sudo chown www-data: bild/`)
 
-3. Enter the cloned directory: `cd image-server`
+3. Enter the cloned directory: `cd bild`
 
 4. Compile: `rustup run nightly cargo build --release`
-    - This will create two binaries, `auth` and `image-server`. `auth` will be explained in the next section.
+    - This will create two binaries, `bild-auth` and `bild-server`. `bild-auth` will be explained in the next section.
 
 ### Authentication
 __Note__: Make sure you have compiled as described in the step above.
 
-The auth binary created is a small helper program to generate a secure token for authentication.
-This token is saved to `/etc/image-server/auth.key` which will be read by image-server when it's running.
-The `auth` tool also produces the header string which can be added to chatterino later when setting up the uploader. 
+The `bild-auth` binary created is a small helper program to generate a secure token for authentication.
+This token is saved to `/etc/bild-server/auth.key` which will be read by bild-server when it's running.
+The `bild-auth` tool also produces the header string which can be added to chatterino later when setting up the uploader. 
 
-1. Run auth: `./target/release/auth`
+1. Run bild-auth: `./target/release/bild-auth`
 
 Copy the `Authorization: Bearer XXXXXXXXXXXXXX` it outputs.
 
 Thats it for authentication!
 
 ### Systemd service
-1. Create service file: `touch /etc/systemd/system/image-server.service`
+1. Create service file: `touch /etc/systemd/system/bild-server.service`
 
 2. Edit the file and add the following:<br>
 <ins>__NOTE__: The `ROCKET_RATE_LIMIT` environment variable is optional, if you omit this variable it will default to allow two (2) requests per second.</ins>
@@ -91,7 +90,7 @@ Description=My Rocket application for your-domain.com
 User=www-data
 Group=www-data
 # The user www-data should probably own that directory
-WorkingDirectory=/var/www/image-server
+WorkingDirectory=/var/www/bild
 Environment="ROCKET_ENV=prod"
 Environment="ROCKET_ADDRESS=127.0.0.1"
 Environment="ROCKET_PORT=1337"
@@ -99,20 +98,20 @@ Environment="ROCKET_LOG=critical"
 Environment="ROCKET_SERVER_URL=https://your-domain.com"
 # Optional environment variable
 # Environment="ROCKET_RATE_LIMIT=2" # default is 2
-ExecStart=/var/www/image-server/target/release/image-server
+ExecStart=/var/www/bild/target/release/bild-server
 
 [Install]
 WantedBy=multi-user.target
 ```
 
-3. Start and enable the service: `sudo systemctl start image-server.service && sudo systemctl enable image-server.service`
+3. Start and enable the service: `sudo systemctl start bild-server.service && sudo systemctl enable bild-server.service`
 
 ### Chatterino setup
 In chatterino settings -> External tools -> Image Uploader, enter in the following:
 
 - Request URL: `https://your-domain.com/i/upload`
 - Form field: `data`
-- Extra Headers: `Authorization: Bearer XXXXXXXXXXXXXX` (replace this with the output from `auth`)
+- Extra Headers: `Authorization: Bearer XXXXXXXXXXXXXX` (replace this with the output from `bild-auth`)
 - Image link: `{url}`
 
 Done! :)

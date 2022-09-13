@@ -20,7 +20,7 @@ impl<'a> FromRequest<'a> for ApiKey<'a> {
 
     async fn from_request(req: &'a Request<'_>) -> Outcome<Self, Self::Error> {
         fn is_valid(key: &str) -> bool {
-            key.replace("Bearer ", "") == fs::read_to_string("/etc/image-server/auth.key").unwrap()
+            key.replace("Bearer ", "") == fs::read_to_string("/etc/bild-server/auth.key").unwrap()
         }
 
         match req.headers().get_one("Authorization") {
