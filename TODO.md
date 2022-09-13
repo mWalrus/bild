@@ -3,10 +3,7 @@
 - [x] authentication
 - [x] read url from env
 - [x] install instructions
-- [ ] limit to image files
-  - [ ] jpg
-  - [ ] png
-  - [ ] gif
+- [x] limit to image files
 - [x] check if new file name is unique
 - [x] rate limitations
 - [x] security

@@ -7,7 +7,12 @@ use std::{fs::File, path::PathBuf};
 use webp::{Encoder, WebPMemory};
 
 pub fn to_webp(path: &str) -> Option<String> {
-    let image: DynamicImage = Reader::open(path).unwrap().decode().unwrap();
+    let image: DynamicImage = Reader::open(path)
+        .unwrap()
+        .with_guessed_format()
+        .unwrap()
+        .decode()
+        .unwrap();
 
     // Create the encoder from the DynamicImage
     let encoder: Encoder = Encoder::from_image(&image).unwrap();
