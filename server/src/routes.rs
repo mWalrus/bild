@@ -28,17 +28,17 @@ impl<'r> RocketGovernable<'r> for RateLimitGuard {
 }
 
 #[catch(404)]
-pub fn not_found() -> content::RawHtml<String> {
-    content::RawHtml(include_str!("error_pages/404.html").to_string())
+pub fn not_found() -> content::RawHtml<&'static str> {
+    content::RawHtml(include_str!("error_pages/404.html"))
 }
 #[catch(500)]
-pub fn internal_error() -> content::RawHtml<String> {
-    content::RawHtml(include_str!("error_pages/500.html").to_string())
+pub fn internal_error() -> content::RawHtml<&'static str> {
+    content::RawHtml(include_str!("error_pages/500.html"))
 }
 
 #[catch(429)]
-pub fn too_many_requests() -> content::RawHtml<String> {
-    content::RawHtml(include_str!("error_pages/429.html").to_string())
+pub fn too_many_requests() -> content::RawHtml<&'static str> {
+    content::RawHtml(include_str!("error_pages/429.html"))
 }
 
 #[catch(default)]
