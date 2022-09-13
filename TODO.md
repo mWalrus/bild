@@ -10,3 +10,6 @@
 - [ ] delete files
 - [ ] install script
 - [ ] Performance testing
+
+# Auth
+- [ ] arg for only printing the raw bearer token
