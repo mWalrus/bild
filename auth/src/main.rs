@@ -36,6 +36,14 @@ impl Auth {
 fn main() -> Result<(), io::Error> {
     let auth = Auth::new();
     auth.persist()?;
+
+    let args: Vec<String> = std::env::args().collect();
+
+    if &args[1] == "-t" {
+        println!("{}", auth.token);
+        std::process::exit(0);
+    }
+
     let header = format!("Authorization: Bearer {}", auth.token);
 
     println!(
