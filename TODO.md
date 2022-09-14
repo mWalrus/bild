@@ -8,16 +8,19 @@
 - [x] rate limitations
 - [x] security
 - [ ] delete files
-- [ ] install script
+- [x] install script
 - [ ] Performance testing
 - [x] change routes to mount to / instead of /i
+- [ ] Update README with installer instructions
 
 # Auth
 - [x] arg for only printing the raw bearer token
 
 # Installer
-- [ ] use subdomain i instead of /i
-    - [ ] nginx configuration for subdomain
-        - [ ] config file name
-        - [ ] proxy pass to / instead of /i
-    - [ ] certificate generation only for subdomain
+- [x] use subdomain i instead of /i
+    - [x] nginx configuration for subdomain
+        - [x] config file name
+        - [x] proxy pass to / instead of /i
+    - [x] certificate generation only for subdomain
+- [ ] More testing
+- [ ] Serve install script under `bild.waalrus.xyz/installer`
