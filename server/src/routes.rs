@@ -68,7 +68,7 @@ pub async fn upload(
     file.persist_to(&tmp_file_path).await.unwrap();
     // FIXME: handle image conversion in separate thread
     if let Some(file_name) = convert_image::to_webp(&tmp_file_path) {
-        let url = format!("{}/i/{file_name}", *SERVER_URL);
+        let url = format!("i.{}/{file_name}", *SERVER_URL);
         return status::Custom(Status::Ok, json!({ "url": url }));
     }
     status::Custom(
