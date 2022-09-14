@@ -10,7 +10,7 @@
 - [ ] delete files
 - [ ] install script
 - [ ] Performance testing
-- [ ] change routes to mount to / instead of /i
+- [x] change routes to mount to / instead of /i
 
 # Auth
 - [x] arg for only printing the raw bearer token
