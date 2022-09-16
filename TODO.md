@@ -11,7 +11,8 @@
 - [x] install script
 - [ ] Performance testing
 - [x] change routes to mount to / instead of /i
-- [ ] Update README with installer instructions
+- [x] Update README with installer instructions
+- [ ] Support video upload
 
 # Auth
 - [x] arg for only printing the raw bearer token
@@ -22,5 +23,6 @@
         - [x] config file name
         - [x] proxy pass to / instead of /i
     - [x] certificate generation only for subdomain
+- [x] Serve install script under `bild.waalrus.xyz/installer`
 - [ ] More testing
-- [ ] Serve install script under `bild.waalrus.xyz/installer`
+- [ ] Ask to input rate limit
