@@ -10,8 +10,6 @@ use rocket::Request;
 use rocket_governor::{Method, Quota, RocketGovernable, RocketGovernor};
 use std::path::{Path, PathBuf};
 
-pub struct RateLimitGuard;
-
 lazy_static! {
     static ref RATE_LIMIT: u32 = std::env::var("ROCKET_RATE_LIMIT")
         .unwrap_or_else(|_| "2".into())
@@ -20,6 +18,8 @@ lazy_static! {
     static ref SERVER_URL: String =
         std::env::var("ROCKET_SERVER_URL").unwrap_or_else(|_| "http://localhost:1337".to_string());
 }
+
+pub struct RateLimitGuard;
 
 impl<'r> RocketGovernable<'r> for RateLimitGuard {
     fn quota(_method: Method, _route_name: &str) -> Quota {
