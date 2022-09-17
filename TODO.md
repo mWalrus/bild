@@ -27,3 +27,6 @@
 - [x] More testing
 - [x] POSIX compliance
 - [x] Ask to input rate limit
+
+# Misc
+- [ ] gitlab ci
