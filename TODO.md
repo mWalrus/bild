@@ -23,6 +23,7 @@
         - [x] config file name
         - [x] proxy pass to / instead of /i
     - [x] certificate generation only for subdomain
-- [x] Serve install script under `bild.waalrus.xyz/installer`
-- [ ] More testing
-- [ ] Ask to input rate limit
+- [x] Serve install script under `bild.waalrus.xyz/bild.sh`
+- [x] More testing
+- [x] POSIX compliance
+- [x] Ask to input rate limit
