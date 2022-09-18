@@ -1,5 +1,5 @@
 # TODO
-- [ ] file size limitations
+- [x] file size limitations
 - [x] authentication
 - [x] read url from env
 - [x] install instructions

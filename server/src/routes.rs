@@ -58,14 +58,14 @@ pub async fn file(file: PathBuf) -> Option<NamedFile> {
     NamedFile::open(file_path).await.ok()
 }
 
-#[post("/upload", data = "<file>")]
+#[post("/upload", data = "<image>")]
 pub async fn upload(
-    mut file: Form<TempFile<'_>>,
+    mut image: Form<TempFile<'_>>,
     _lg: RocketGovernor<'_, RateLimitGuard>,
     _key: ApiKey<'_>,
 ) -> status::Custom<Value> {
     let tmp_file_path = format!("/tmp/{}", gen::file_name(".png"));
-    file.persist_to(&tmp_file_path).await.unwrap();
+    image.persist_to(&tmp_file_path).await.unwrap();
     // FIXME: handle image conversion in separate thread
     if let Some(file_name) = convert_image::to_webp(&tmp_file_path) {
         let url = format!("{}/{file_name}", *SERVER_URL);
