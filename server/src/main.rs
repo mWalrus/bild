@@ -2,6 +2,7 @@
 extern crate rocket;
 mod api_key;
 mod convert_image;
+mod garbage;
 mod gen;
 mod routes;
 
@@ -11,10 +12,10 @@ use routes::{default, internal_error, not_found};
 
 #[launch]
 fn rocket() -> _ {
+    garbage::run_collector();
+
     let mut config = Config::default();
-
     let limits = Limits::default().limit("image", 5.mebibytes());
-
     config.limits = limits;
 
     rocket::custom(config)
