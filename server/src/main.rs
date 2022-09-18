@@ -7,7 +7,7 @@ mod routes;
 
 use rocket::data::{Limits, ToByteUnit};
 use rocket::Config;
-use routes::{default, internal_error, not_found, too_many_requests};
+use routes::{default, internal_error, not_found};
 
 #[launch]
 fn rocket() -> _ {
@@ -18,9 +18,6 @@ fn rocket() -> _ {
     config.limits = limits;
 
     rocket::custom(config)
-        .register(
-            "/",
-            catchers![not_found, internal_error, too_many_requests, default],
-        )
+        .register("/", catchers![not_found, internal_error, default])
         .mount("/", routes![routes::upload, routes::file])
 }
