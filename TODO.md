@@ -7,7 +7,7 @@
 - [x] check if new file name is unique
 - [x] rate limitations
 - [x] security
-- [ ] delete files
+- [x] delete files
 - [x] install script
 - [ ] Performance testing
 - [x] change routes to mount to / instead of /i
