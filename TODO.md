@@ -27,6 +27,11 @@
 - [x] More testing
 - [x] POSIX compliance
 - [x] Ask to input rate limit
+- [ ] Ask about other configuration
+    - [ ] garbage collector
+        - [ ] enable?
+        - [ ] max age of files?
+    - [ ] max payload size for uploads
 
 # Misc
 - [ ] gitlab ci
