@@ -1,7 +1,8 @@
 use std::time::Duration;
 use std::{fs, thread};
 
-static MAX_AGE: Duration = Duration::new(60 * 60 * 24 * 7 * 2, 0); // 2 weeks
+use crate::UPLOAD_MAX_AGE;
+
 static SLEEP_TIMER: Duration = Duration::new(60 * 60 * 2, 0); // 2 hours
 
 // Deletes files older than the specified MAX_AGE value, which is 2 weeks by default.
@@ -13,7 +14,7 @@ pub fn run_collector() {
                 for entry in rd {
                     let entry = entry?;
                     // skip the file if it shouldn't be dealt with.
-                    if entry.metadata()?.created()?.elapsed().unwrap() < MAX_AGE {
+                    if entry.metadata()?.created()?.elapsed().unwrap() < *UPLOAD_MAX_AGE {
                         continue;
                     }
                     fs::remove_file(entry.path())?;

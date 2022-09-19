@@ -58,4 +58,13 @@ older than __2 weeks__. This garbage collection runs every 2 hours from the time
 
 This will be configurable in the future.
 
+## Information
 
+#### Environment Variables
+|Name|Type|Default|Description|
+|-|-|-|-|
+|ROCKET_SERVER_URL|String|http://localhost:1337|The URL in the returned image link|
+|ROCKET_RATE_LIMIT|Integer|2|Number of allowed requests per second|
+|ROCKET_FILE_AGE_WEEKS|Integer|2|Number of weeks files are allowed to live for|
+|ROCKET_GARBAGE_COLLECTOR|Integer|1|Turn old file deletion ON (1) or OFF (0)|
+|ROCKET_UPLOAD_MAX_SIZE|Integer|5|Maximum allowed file size, in MiB, the server will allow|
