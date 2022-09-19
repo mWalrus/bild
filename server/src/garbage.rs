@@ -12,10 +12,8 @@ pub fn run_collector() {
             if let Ok(rd) = fs::read_dir("static/uploads") {
                 for entry in rd {
                     let entry = entry?;
-                    let metadata = entry.metadata()?;
-                    let time = metadata.created()?;
                     // skip the file if it shouldn't be dealt with.
-                    if time.elapsed().unwrap() < MAX_AGE {
+                    if entry.metadata()?.created()?.elapsed().unwrap() < MAX_AGE {
                         continue;
                     }
                     fs::remove_file(entry.path())?;
