@@ -35,8 +35,10 @@ fn rocket() -> _ {
         garbage::run_collector();
     }
 
-    let mut config = Config::default();
-    config.limits = Limits::default().limit("image", (*UPLOAD_MAX_SIZE).mebibytes());
+    let config = Config {
+        limits: Limits::default().limit("image", (*UPLOAD_MAX_SIZE).mebibytes()),
+        ..Default::default()
+    };
 
     rocket::custom(config)
         .register("/", catchers![not_found, internal_error, default])

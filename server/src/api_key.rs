@@ -25,8 +25,12 @@ impl<'a> FromRequest<'a> for ApiKey<'a> {
 
         match req.headers().get_one("Authorization") {
             None => Outcome::Failure((Status::BadRequest, ApiKeyError::Missing)),
-            Some(key) if is_valid(key) => Outcome::Success(ApiKey(key)),
-            Some(_) => Outcome::Failure((Status::BadRequest, ApiKeyError::Invalid)),
+            Some(key) => {
+                if is_valid(key) {
+                    return Outcome::Success(ApiKey(key));
+                }
+                Outcome::Failure((Status::BadRequest, ApiKeyError::Invalid))
+            }
         }
     }
 }
