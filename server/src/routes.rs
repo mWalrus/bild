@@ -1,6 +1,6 @@
 use crate::api_key::ApiKey;
 use crate::{convert_image, gen};
-use lazy_static::lazy_static;
+use crate::{RATE_LIMIT, SERVER_URL};
 use rocket::form::Form;
 use rocket::fs::{NamedFile, TempFile};
 use rocket::http::Status;
@@ -11,15 +11,6 @@ use rocket_governor::{Method, Quota, RocketGovernable, RocketGovernor};
 use std::path::{Path, PathBuf};
 
 pub struct RateLimitGuard;
-
-lazy_static! {
-    static ref RATE_LIMIT: u32 = std::env::var("ROCKET_RATE_LIMIT")
-        .unwrap_or_else(|_| "2".into())
-        .parse()
-        .unwrap();
-    static ref SERVER_URL: String =
-        std::env::var("ROCKET_SERVER_URL").unwrap_or_else(|_| "http://localhost:1337".to_string());
-}
 
 impl<'r> RocketGovernable<'r> for RateLimitGuard {
     fn quota(_method: Method, _route_name: &str) -> Quota {
