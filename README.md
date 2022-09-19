@@ -1,6 +1,6 @@
 # Bild - A small image uploader and server
 
-A small image uploader and hoster built with Rust, [rocket](https://rocket.rs), and
+A small, self-hosted image uploader and hoster built with Rust, [rocket](https://rocket.rs), and
 [image](https://github.com/image-rs/image).
 
 ## Disclaimer
@@ -16,23 +16,28 @@ Visit [the project homepage](https://bild.waalrus.xyz) for installation instruct
 
 #### Authenticated uploads
 In order to upload a file to your Bild instance, you are required to supply an authorization token.
-Authorization tokens are generated with the `bild-auth` tool in this repository.
+Authorization tokens are generated with the `bild-auth` tool in this repository and are cryptographically strong.
 When you first install Bild, using the installer, a token is automatically generated, stored, and
 communicated to you at the end of the installer's run, so no need to worry about that there.
 
 You can always generate a new token by simply running the `bild-auth` tool again. This will replace
 the old token, making it invalid.<br>
-As with any sensitive authentication related information, keep this token safe and do NOT share it
+As with any sensitive authentication related information, keep this token safe and do __NOT__ share it
 with anyone you don't want to have access.
 
 ####  Format conversion
 With Bild you can upload image files in any of the more popular image formats.
 Bild will take the file you upload, guess the format from the raw uploaded data or file extension,
 and then convert it to [WebP](https://en.wikipedia.org/wiki/WebP) for faster load times
-when viewing the image. If an upload would fail to be converted, the server responds with a
+when viewing the image in the browser. If an upload would fail to be converted, the server responds with a
 [`500 Internal Server Error`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500) error.
 This is usually because the file type being uploaded could not be converted to WebP due to the file
 either not being an image file or being corrupted.
+
+#### Clutter-free and fast viewing
+Bild serves images, and only images. There is no need for fancy a fancy landing page slowing down response times.
+The fact that Bild converts the uploaded images to WebP also helps improve said response time, since WebP usually
+shrinks the file size.
 
 #### Size limitation
 Bild currently limits the accepted size of an uploaded file to be 5 MiB at max. If you attempt
