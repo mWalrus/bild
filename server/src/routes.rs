@@ -6,7 +6,7 @@ use rocket::fs::{NamedFile, TempFile};
 use rocket::http::Status;
 use rocket::response::{content, status};
 use rocket::serde::json::{json, Value};
-use rocket::Request;
+use rocket::{Config, Request};
 use rocket_governor::{Method, Quota, RocketGovernable, RocketGovernor};
 use std::path::{Path, PathBuf};
 
@@ -49,8 +49,9 @@ pub async fn upload(
     mut image: Form<TempFile<'_>>,
     _lg: RocketGovernor<'_, RateLimitGuard>,
     _key: ApiKey<'_>,
+    config: &Config,
 ) -> status::Custom<Value> {
-    let tmp_file_path = format!("/tmp/{}", gen::file_name(".png"));
+    let tmp_file_path = config.temp_dir.relative().join(gen::file_name(""));
     image.persist_to(&tmp_file_path).await.unwrap();
     // FIXME: handle image conversion in separate thread
     if let Some(file_name) = convert_image::to_webp(&tmp_file_path) {

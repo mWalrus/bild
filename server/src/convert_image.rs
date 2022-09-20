@@ -6,7 +6,7 @@ use std::path::Path;
 use std::{fs::File, path::PathBuf};
 use webp::{Encoder, WebPMemory};
 
-pub fn to_webp(path: &str) -> Option<String> {
+pub fn to_webp(path: &PathBuf) -> Option<String> {
     let image: DynamicImage = Reader::open(path)
         .unwrap()
         .with_guessed_format()

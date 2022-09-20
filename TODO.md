@@ -32,6 +32,9 @@
         - [x] enable?
         - [x] max age of files?
     - [x] max payload size for uploads
+- [ ] additional dependencies
+    - [ ] ffmpeg
+    - [ ] ffprobe
 
 # Misc
 - [x] gitlab ci
