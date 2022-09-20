@@ -34,4 +34,4 @@
     - [x] max payload size for uploads
 
 # Misc
-- [ ] gitlab ci
+- [x] gitlab ci
