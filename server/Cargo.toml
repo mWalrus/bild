@@ -14,4 +14,5 @@ rocket = { version = "0.5.0-rc.2", features = ["tls", "json"] }
 rocket-governor = "0.1.0-rc.4"
 serde = { version = "1.0.144", features = ["derive"] }
 webp = "0.2.2"
+webp-animation = { version = "0.7.0", features = ["image"] }
 

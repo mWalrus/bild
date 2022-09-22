@@ -70,17 +70,21 @@ pub async fn upload(
     let mut byte_buffer = [0; 39];
     f.read(&mut byte_buffer).unwrap();
 
-    if infer::is_video(&byte_buffer) {
-        let mime_type = infer::get(&byte_buffer).unwrap().mime_type();
-        if let Some(file_name) = converter::video_to_mp4(&tmp_file_path, mime_type) {
-            let url = format!("{}/{file_name}", *SERVER_URL);
-            return status::Custom(Status::Ok, json!({ "url": url }));
-        }
+    let mime_type = infer::get(&byte_buffer).unwrap().mime_type();
+
+    let file_name = if mime_type == "image/gif" {
+        converter::gif_to_webp(&tmp_file_path)
+    } else if infer::is_video(&byte_buffer) {
+        converter::video_to_mp4(&tmp_file_path, mime_type)
     } else if infer::is_image(&byte_buffer) {
-        if let Some(file_name) = converter::image_to_webp(&tmp_file_path) {
-            let url = format!("{}/{file_name}", *SERVER_URL);
-            return status::Custom(Status::Ok, json!({ "url": url }));
-        }
+        converter::image_to_webp(&tmp_file_path)
+    } else {
+        None
+    };
+
+    if let Some(file_name) = file_name {
+        let url = format!("{}/{file_name}", *SERVER_URL);
+        return status::Custom(Status::Ok, json!({ "url": url }));
     }
     status::Custom(
         Status::InternalServerError,
