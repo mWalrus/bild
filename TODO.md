@@ -12,7 +12,8 @@
 - [ ] Performance testing
 - [x] change routes to mount to / instead of /i
 - [x] Update README with installer instructions
-- [ ] Support video upload
+- [x] Support video upload
+- [ ] Preserve frames in gif uploads
 
 # Auth
 - [x] arg for only printing the raw bearer token
@@ -32,9 +33,8 @@
         - [x] enable?
         - [x] max age of files?
     - [x] max payload size for uploads
-- [ ] additional dependencies
-    - [ ] ffmpeg
-    - [ ] ffprobe
+- [x] additional dependencies
+    - [x] ffmpeg
 
 # Misc
 - [x] gitlab ci

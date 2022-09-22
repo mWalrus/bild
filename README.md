@@ -26,13 +26,25 @@ As with any sensitive authentication related information, keep this token safe a
 with anyone you don't want to have access.
 
 ####  Format conversion
-With Bild you can upload image files in any of the more popular image formats.
-Bild will take the file you upload, guess the format from the raw uploaded data or file extension,
-and then convert it to [WebP](https://en.wikipedia.org/wiki/WebP) for faster load times
-when viewing the image in the browser. If an upload would fail to be converted, the server responds with a
-[`500 Internal Server Error`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500) error.
-This is usually because the file type being uploaded could not be converted to WebP due to the file
-either not being an image file or being corrupted.
+With Bild you can upload both images and videos. Bild supports a wide variety of [image formats](https://github.com/image-rs/image/blob/master/README.md#supported-image-formats)
+and [video formats](https://github.com/bojand/infer#video).
+
+##### Images
+When you upload an image to Bild, it will take the image, decode its contents and converts it to
+[WebP](https://en.wikipedia.org/wiki/WebP) in order to make the file's footprint on your server
+smaller.
+Bild also supports converting animated `.gif` files into animated `.webp` files.
+
+##### Videos
+When you upload videos to Bild, Bild makes sure to convert the video to `.mp4` in order to support
+the wider range of browsers out there. For this Bild uses `ffmpeg` under the hood.
+
+##### Failures
+If an upload fails the server responds with a [`500 Internal Server Error`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500) error.
+This is usually because the file being uploaded isn't supported, which means Bild won't be able to
+convert the file into the final format.
+If the file being uploaded is of a supported format and it still fails, it could be because the
+file is corrupted.
 
 #### Clutter-free and fast viewing
 Bild serves images, and only images. There is no need for fancy a fancy landing page slowing down response times.
@@ -40,8 +52,8 @@ The fact that Bild converts the uploaded images to WebP also helps improve said 
 shrinks the file size.
 
 #### Size limitation
-Bild currently limits the accepted size of an uploaded file to be 5 MiB at max. If you attempt
-to upload a file larger than 5 MiB, the server will respond with a
+Bild currently limits the accepted size of an uploaded file to be 20 MiB at max. If you attempt
+to upload a file larger than 20 MiB, the server will respond with a
 [`413 Payload Too Large`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/413) error.
 
 #### Request limitations

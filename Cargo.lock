@@ -130,12 +130,14 @@ name = "bild-server"
 version = "0.2.1"
 dependencies = [
  "image",
+ "infer",
  "lazy_static",
  "rand",
  "rocket",
  "rocket-governor",
  "serde",
  "webp",
+ "webp-animation",
 ]
 
 [[package]]
@@ -790,6 +792,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "infer"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f178e61cdbfe084aa75a2f4f7a25a5bb09701a47ae1753608f194b15783c937a"
+
+[[package]]
 name = "inlinable_string"
 version = "0.1.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -862,6 +870,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "439fd1885aa28937e7edcd68d2e793cb4a22f8733460d2519fbafd2b215672bf"
 dependencies = [
  "cc",
+]
+
+[[package]]
+name = "libwebp-sys2"
+version = "0.1.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "26fb914ed98d342071062d53d6d3af7681697697085c1f55ec438d77d748e308"
+dependencies = [
+ "cc",
+ "cfg-if",
+ "libc",
+ "pkg-config",
+ "vcpkg",
 ]
 
 [[package]]
@@ -1143,6 +1164,12 @@ name = "pin-utils"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184"
+
+[[package]]
+name = "pkg-config"
+version = "0.3.25"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1df8c4ec4b0627e53bdf214615ad287367e482558cf84b109250b37464dc03ae"
 
 [[package]]
 name = "png"
@@ -1924,6 +1951,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "830b7e5d4d90034032940e4ace0d9a9a057e7a45cd94e6c007832e39edb82f6d"
 
 [[package]]
+name = "vcpkg"
+version = "0.2.15"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "accd4ea62f7bb7a82fe23066fb0957d48ef677f6eeb8215f372f52e48bb32426"
+
+[[package]]
 name = "version_check"
 version = "0.9.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2023,6 +2056,17 @@ checksum = "cf022f821f166079a407d000ab57e84de020e66ffbbf4edde999bc7d6e371cae"
 dependencies = [
  "image",
  "libwebp-sys",
+]
+
+[[package]]
+name = "webp-animation"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b84fb45f4f3836cbd6d6f45cb9d89cb015322c0e56a7363dcccfdcd79d76310e"
+dependencies = [
+ "image",
+ "libwebp-sys2",
+ "log",
 ]
 
 [[package]]
