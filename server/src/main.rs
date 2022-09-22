@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate rocket;
 mod api_key;
-mod convert_image;
+mod converter;
 mod garbage;
 mod gen;
 mod routes;
@@ -26,8 +26,10 @@ lazy_static! {
         Duration::new(60 * 60 * 24 * 7 * num_weeks, 0)
     };
     pub static ref GARBAGE_COLLECTOR: bool = env!("ROCKET_GARBAGE_COLLECTOR", "1") == "1";
-    pub static ref UPLOAD_MAX_SIZE: u8 = env!("ROCKET_UPLOAD_MAX_SIZE", "5").parse().unwrap();
+    pub static ref UPLOAD_MAX_SIZE: u8 = env!("ROCKET_UPLOAD_MAX_SIZE", "20").parse().unwrap();
 }
+
+pub static UPLOADS_DIR: &str = "static/uploads/";
 
 #[launch]
 fn rocket() -> _ {
@@ -36,7 +38,9 @@ fn rocket() -> _ {
     }
 
     let config = Config {
-        limits: Limits::default().limit("image", (*UPLOAD_MAX_SIZE).mebibytes()),
+        limits: Limits::default()
+            .limit("data-form", (*UPLOAD_MAX_SIZE).mebibytes())
+            .limit("file", (*UPLOAD_MAX_SIZE).mebibytes()),
         ..Default::default()
     };
 
