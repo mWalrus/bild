@@ -1,5 +1,4 @@
 use crate::{gen, UPLOADS_DIR};
-use ffmpeg_next as ffmpeg;
 use image::io::Reader;
 use image::DynamicImage;
 use std::io::Write;
