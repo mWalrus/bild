@@ -14,6 +14,11 @@
 - [x] Update README with installer instructions
 - [x] Support video upload
 - [ ] Preserve frames in gif uploads
+    - [x] basic animated webp conversion
+    - [ ] preserve frame delays
+- [ ] delete /tmp files after handling
+- [ ] rename /tmp files to bild_upload_xxxxx
+    - [ ] could be called xxxxx.bild
 
 # Auth
 - [x] arg for only printing the raw bearer token
