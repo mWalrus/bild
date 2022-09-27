@@ -107,7 +107,7 @@ pub fn video_to_mp4(bytes: &[u8], mime_type: &str) -> Result<String, ConversionE
 
     // FIXME: temp solution until I can figure out how to feed ffmpeg
     //        the image bytes.
-    let tmp_path = temp_dir().join(gen::file_name());
+    let tmp_path = temp_dir().join(format!("{new_vid_name}.bild"));
     std::fs::write(&tmp_path, bytes).map_err(ConversionError::IO)?;
 
     // just switch the containers if mkv
@@ -134,5 +134,9 @@ pub fn video_to_mp4(bytes: &[u8], mime_type: &str) -> Result<String, ConversionE
     if !status.success() {
         Err(ConversionError::Ffmpeg)?;
     }
+    std::thread::spawn(move || {
+        // try to remove the temp file
+        std::fs::remove_file(tmp_path).unwrap_or_else(|_| ());
+    });
     Ok(new_vid_name)
 }
