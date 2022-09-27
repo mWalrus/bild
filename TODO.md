@@ -9,10 +9,13 @@
 - [x] security
 - [x] delete files
 - [x] install script
-- [ ] Performance testing
 - [x] change routes to mount to / instead of /i
 - [x] Update README with installer instructions
 - [x] Support video upload
+- [x] Error handling
+    - [x] Update README with env vars
+    - [x] Test video upload if it still works
+        - [x] Fix video upload
 - [ ] Preserve frames in gif uploads
     - [x] basic animated webp conversion
     - [ ] preserve frame delays
@@ -40,6 +43,7 @@
     - [x] max payload size for uploads
 - [x] additional dependencies
     - [x] ffmpeg
+- [x] Ask for vid and img limits in installer
 
 # Misc
 - [x] gitlab ci
