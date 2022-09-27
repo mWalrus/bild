@@ -4,12 +4,14 @@ mod api_key;
 mod converter;
 mod garbage;
 mod gen;
+mod guards;
 mod routes;
+mod types;
 
 use lazy_static::lazy_static;
 use rocket::data::{Limits, ToByteUnit};
 use rocket::Config;
-use routes::{default, internal_error, not_found};
+use routes::{default, not_found};
 use std::time::Duration;
 
 macro_rules! env {
@@ -26,7 +28,10 @@ lazy_static! {
         Duration::new(60 * 60 * 24 * 7 * num_weeks, 0)
     };
     pub static ref GARBAGE_COLLECTOR: bool = env!("ROCKET_GARBAGE_COLLECTOR", "1") == "1";
-    pub static ref UPLOAD_MAX_SIZE: u8 = env!("ROCKET_UPLOAD_MAX_SIZE", "20").parse().unwrap();
+    pub static ref VIDEO_UPLOAD_MAX_SIZE: u8 =
+        env!("ROCKET_VIDEO_UPLOAD_MAX_SIZE", "20").parse().unwrap();
+    pub static ref IMAGE_UPLOAD_MAX_SIZE: u8 =
+        env!("ROCKET_IMAGE_UPLOAD_MAX_SIZE", "5").parse().unwrap();
 }
 
 pub static UPLOADS_DIR: &str = "static/uploads/";
@@ -39,12 +44,13 @@ fn rocket() -> _ {
 
     let config = Config {
         limits: Limits::default()
-            .limit("data-form", (*UPLOAD_MAX_SIZE).mebibytes())
-            .limit("file", (*UPLOAD_MAX_SIZE).mebibytes()),
+            .limit("data-form", (*VIDEO_UPLOAD_MAX_SIZE).mebibytes())
+            .limit("upload/image", (*VIDEO_UPLOAD_MAX_SIZE).mebibytes())
+            .limit("upload/video", (*IMAGE_UPLOAD_MAX_SIZE).mebibytes()),
         ..Default::default()
     };
 
     rocket::custom(config)
-        .register("/", catchers![not_found, internal_error, default])
+        .register("/", catchers![not_found, default])
         .mount("/", routes![routes::upload, routes::file])
 }

@@ -79,4 +79,5 @@ This will be configurable in the future.
 |ROCKET_RATE_LIMIT|Integer|2|Number of allowed requests per second|
 |ROCKET_FILE_AGE_WEEKS|Integer|2|Number of weeks files are allowed to live for|
 |ROCKET_GARBAGE_COLLECTOR|Integer|1|Turn old file deletion ON (1) or OFF (0)|
-|ROCKET_UPLOAD_MAX_SIZE|Integer|20|Maximum allowed file size, in MiB, the server will allow|
+|ROCKET_VIDEO_UPLOAD_MAX_SIZE|Integer|20|Maximum allowed video file size, in MiB, the server will allow|
+|ROCKET_IMAGE_UPLOAD_MAX_SIZE|Integer|5|Maximum allowed image file size, in MiB, the server will allow|
