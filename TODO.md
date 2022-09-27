@@ -12,16 +12,20 @@
 - [x] change routes to mount to / instead of /i
 - [x] Update README with installer instructions
 - [x] Support video upload
-- [x] Error handling
+- [ ] Error handling
     - [x] Update README with env vars
     - [x] Test video upload if it still works
         - [x] Fix video upload
+    - [ ] Propagate the error to the catcher
 - [ ] Preserve frames in gif uploads
     - [x] basic animated webp conversion
     - [ ] preserve frame delays
-- [ ] delete /tmp files after handling
-- [ ] rename /tmp files to bild_upload_xxxxx
-    - [ ] could be called xxxxx.bild
+- [x] delete /tmp files after handling
+- [ ] Testing
+
+# Bugs
+- [ ] Throws 422 Unprocessable Entity when 429 would be the correct code
+- [ ] Throws "file too large" on video of size 17MiB (limit is 20MiB)
 
 # Auth
 - [x] arg for only printing the raw bearer token
