@@ -1,6 +1,5 @@
 #[macro_use]
 extern crate rocket;
-mod api_key;
 mod converter;
 mod garbage;
 mod gen;
