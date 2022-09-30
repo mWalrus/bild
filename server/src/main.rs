@@ -28,10 +28,7 @@ lazy_static! {
         Duration::new(60 * 60 * 24 * 7 * num_weeks, 0)
     };
     pub static ref GARBAGE_COLLECTOR: bool = env!("ROCKET_GARBAGE_COLLECTOR", "1") == "1";
-    pub static ref VIDEO_UPLOAD_MAX_SIZE: u8 =
-        env!("ROCKET_VIDEO_UPLOAD_MAX_SIZE", "20").parse().unwrap();
-    pub static ref IMAGE_UPLOAD_MAX_SIZE: u8 =
-        env!("ROCKET_IMAGE_UPLOAD_MAX_SIZE", "5").parse().unwrap();
+    pub static ref UPLOAD_MAX_SIZE: u8 = env!("ROCKET_UPLOAD_MAX_SIZE", "20").parse().unwrap();
 }
 
 pub static UPLOADS_DIR: &str = "static/uploads/";
@@ -44,9 +41,8 @@ fn rocket() -> _ {
 
     let config = Config {
         limits: Limits::default()
-            .limit("data-form", (*VIDEO_UPLOAD_MAX_SIZE).mebibytes())
-            .limit("upload/image", (*VIDEO_UPLOAD_MAX_SIZE).mebibytes())
-            .limit("upload/video", (*IMAGE_UPLOAD_MAX_SIZE).mebibytes()),
+            .limit("data-form", (*UPLOAD_MAX_SIZE).mebibytes())
+            .limit("upload/image", (*UPLOAD_MAX_SIZE).mebibytes()),
         ..Default::default()
     };
 
