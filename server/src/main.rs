@@ -43,6 +43,7 @@ fn rocket() -> _ {
         limits: Limits::default()
             .limit("data-form", (*UPLOAD_MAX_SIZE).mebibytes())
             .limit("upload/image", (*UPLOAD_MAX_SIZE).mebibytes()),
+        port: 1337,
         ..Default::default()
     };
 
