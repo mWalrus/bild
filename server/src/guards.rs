@@ -45,17 +45,11 @@ impl<'r> FromFormField<'r> for FileData<'r> {
         let is_video = infer::is_video(peeked);
         let is_image = infer::is_image(peeked);
 
-        let vid_limit = field
-            .request
-            .limits()
-            .get("upload/video")
-            .unwrap_or_else(|| 20.mebibytes()); // defaults
-
         let img_limit = field
             .request
             .limits()
             .get("upload/image")
-            .unwrap_or_else(|| 5.mebibytes()); // defaults
+            .unwrap_or_else(|| 20.mebibytes()); // defaults
 
         if !is_video && !is_image {
             Err(form::Error::validation(
@@ -69,10 +63,8 @@ impl<'r> FromFormField<'r> for FileData<'r> {
             ))?,
         };
 
-        let (limit, file_type) = if is_video {
-            (vid_limit, FileType::Video(mime_type.into()))
-        } else if is_image && mime_type == "image/gif" {
-            (vid_limit, FileType::Gif)
+        let (limit, file_type) = if is_image && mime_type == "image/gif" {
+            (img_limit, FileType::Gif)
         } else {
             (img_limit, FileType::Image)
         };
