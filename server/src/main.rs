@@ -48,5 +48,5 @@ fn rocket() -> _ {
 
     rocket::custom(config)
         .register("/", catchers![not_found, default])
-        .mount("/", routes![routes::upload, routes::file])
+        .mount("/", routes![routes::index, routes::upload, routes::file])
 }

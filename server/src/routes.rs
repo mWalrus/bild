@@ -5,7 +5,7 @@ use crate::SERVER_URL;
 use rocket::form::Form;
 use rocket::fs::NamedFile;
 use rocket::http::Status;
-use rocket::response::{content, status};
+use rocket::response::{content, status, Redirect};
 use rocket::serde::json::{json, Value};
 use rocket::Request;
 use rocket_governor::RocketGovernor;
@@ -21,21 +21,18 @@ pub fn default(status: Status, req: &Request<'_>) -> String {
     format!("Something went wrong: {status} ({})", req.uri(),)
 }
 
+#[get("/")]
+pub fn index() -> Redirect {
+    Redirect::to(uri!("https://bild.waalrus.xyz"))
+}
+
 #[get("/<file..>")]
 pub async fn file(file: PathBuf) -> Option<NamedFile> {
-    let mut file_path = Path::new("static/uploads/").join(file);
-    if !file_path.with_extension("mp4").exists() && !file_path.with_extension("webp").exists() {
-        return None;
-    }
-
-    file_path = file_path.with_extension("webp");
-    if file_path.exists() {
+    let file_path = Path::new("static/uploads/").join(file);
+    if file_path.extension().is_some() {
         return NamedFile::open(file_path).await.ok();
-    }
-
-    file_path = file_path.with_extension("mp4");
-    if file_path.exists() {
-        return NamedFile::open(file_path).await.ok();
+    } else if file_path.with_extension("webp").exists() {
+        return NamedFile::open(file_path.with_extension("webp")).await.ok();
     }
     None
 }
