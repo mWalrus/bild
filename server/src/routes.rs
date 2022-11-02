@@ -49,6 +49,7 @@ pub async fn upload(
     let conversion = match ft {
         FileType::Gif => converter::gif_to_webp(bytes),
         FileType::Image => converter::image_to_webp(bytes),
+        FileType::Video(mime_type) => converter::video_to_mp4(bytes, mime_type),
     };
 
     if let Err(e) = conversion {

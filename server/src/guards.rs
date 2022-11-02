@@ -45,7 +45,7 @@ impl<'r> FromFormField<'r> for FileData<'r> {
         let is_video = infer::is_video(peeked);
         let is_image = infer::is_image(peeked);
 
-        let img_limit = field
+        let limit = field
             .request
             .limits()
             .get("upload/image")
@@ -63,10 +63,12 @@ impl<'r> FromFormField<'r> for FileData<'r> {
             ))?,
         };
 
-        let (limit, file_type) = if is_image && mime_type == "image/gif" {
-            (img_limit, FileType::Gif)
+        let file_type = if is_image && mime_type == "image/gif" {
+            FileType::Gif
+        } else if is_video {
+            FileType::Video(mime_type)
         } else {
-            (img_limit, FileType::Image)
+            FileType::Image
         };
 
         let capped_bytes = field.data.open(limit).into_bytes().await?;
