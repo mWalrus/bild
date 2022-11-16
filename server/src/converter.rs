@@ -86,7 +86,7 @@ pub fn gif_to_webp(bytes: &[u8]) -> Result<String, ConversionError> {
         .finalize(final_timestamp)
         .map_err(ConversionError::AWebPEncoder)?;
     let new_webp_file_name = gen::file_name();
-    let output = format!("static/uploads/{new_webp_file_name}.webp");
+    let output = format!("{UPLOADS_DIR}/{new_webp_file_name}.webp");
 
     std::fs::write(output, webp_data).map_err(ConversionError::IO)?;
 

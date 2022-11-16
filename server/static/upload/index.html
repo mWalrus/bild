@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Bild - Upload</title>
+  <link rel="stylesheet" href="main.css">
+  <script src="script.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body onload="load()">
+  <div class="wrapper">
+    <div class="container" id="upload-container">
+      <p>Drop or paste files anywhere or click below</p>
+      <label class="input-label">
+        <input id="file-input" class="file-input" type="file" contenteditable="true" name="data" />
+        Choose files
+      </label>
+      <div id="link-container"></div>
+    </div>
+    <div id="token-container" class="container hidden">
+      <p>Paste auth token here</p>
+      <input type="password" id="token-input" class="token-input" contenteditable="true" />
+      <input type="button" value="Set" onclick="setToken()" id="submit-token-btn" />
+    </div>
+  </div>
+</body>
+
+</html>

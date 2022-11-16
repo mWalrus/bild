@@ -5,20 +5,20 @@ use crate::SERVER_URL;
 use rocket::form::Form;
 use rocket::fs::NamedFile;
 use rocket::http::Status;
-use rocket::response::{content, status, Redirect};
+use rocket::response::{status, Redirect};
 use rocket::serde::json::{json, Value};
 use rocket::Request;
 use rocket_governor::RocketGovernor;
 use std::path::{Path, PathBuf};
 
 #[catch(404)]
-pub fn not_found() -> content::RawHtml<&'static str> {
-    content::RawHtml(include_str!("error_pages/404.html"))
+pub fn not_found() -> Redirect {
+    Redirect::to("/404")
 }
 
 #[catch(default)]
 pub fn default(status: Status, req: &Request<'_>) -> String {
-    format!("Something went wrong: {status} ({})", req.uri(),)
+    format!("Something went wrong: {status} ({})", req.uri())
 }
 
 #[get("/")]
@@ -28,7 +28,7 @@ pub fn index() -> Redirect {
 
 #[get("/<file..>")]
 pub async fn file(file: PathBuf) -> Option<NamedFile> {
-    let file_path = Path::new("static/uploads/").join(file);
+    let file_path = Path::new("uploads/").join(file);
     if file_path.extension().is_some() {
         return NamedFile::open(file_path).await.ok();
     } else if file_path.with_extension("webp").exists() {
@@ -57,5 +57,5 @@ pub async fn upload(
     }
 
     let url = format!("{}/{}", *SERVER_URL, conversion.unwrap());
-    status::Custom(Status::Ok, json!({ "url": url }))
+    status::Custom(Status::Ok, json!({ "link": url }))
 }
