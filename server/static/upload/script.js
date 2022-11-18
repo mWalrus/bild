@@ -42,10 +42,24 @@ function addEventListeners() {
   document.addEventListener('drop', dropHandler, false)
 }
 
-function setToken() {
+async function setToken() {
   let tokenInput = document.getElementById('token-input').value
   if (tokenInput.length === 0) {
     displayMsg('Invalid token')
+    return
+  }
+  
+  const res = await fetch('/token-validation', {
+    method: 'POST',
+    headers: {
+      authorization: `Bearer ${tokenInput}`
+    },
+    cache: 'no-cache'
+  })
+  
+  if (res.status !== 202) {
+    let json = await res.json()
+    displayMsg(json.message)
     return
   }
   window.localStorage.setItem(TOKEN_KEY, tokenInput)

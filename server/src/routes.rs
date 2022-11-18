@@ -18,6 +18,7 @@ pub fn not_found() -> Redirect {
 
 #[catch(default)]
 pub fn default(status: Status, req: &Request<'_>) -> status::Custom<Value> {
+    // format!("Something went wrong: {status} ({}) req: {req}", req.uri())
     let err_msg = *req.local_cache(|| "");
     status::Custom(status, json!({ "message": err_msg }))
 }
@@ -36,6 +37,11 @@ pub async fn file(file: PathBuf) -> Option<NamedFile> {
         return NamedFile::open(file_path.with_extension("webp")).await.ok();
     }
     None
+}
+
+#[post("/token-validation")]
+pub async fn token_validation(_key: ApiKey<'_>) -> status::Accepted<()> {
+    status::Accepted::<()>(None)
 }
 
 #[post("/upload", data = "<file>")]

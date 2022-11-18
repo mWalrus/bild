@@ -49,7 +49,15 @@ fn rocket() -> _ {
 
     rocket::custom(config)
         .register("/", catchers![not_found, default])
-        .mount("/", routes![routes::index, routes::upload, routes::file])
+        .mount(
+            "/",
+            routes![
+                routes::index,
+                routes::upload,
+                routes::file,
+                routes::token_validation
+            ],
+        )
         .mount(
             "/404",
             FileServer::from(concat!(env!("CARGO_MANIFEST_DIR"), "/static/404")).rank(-2),
