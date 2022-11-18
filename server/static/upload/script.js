@@ -3,13 +3,13 @@ const EXT_URL_SVG = new DOMParser().parseFromString('<svg fill="#D8DEE9" xmlns="
 
 function dragOverHandler(e) {
   e.preventDefault()
-  console.log('dragged something')
 }
 
 function dropHandler(e) {
   e.preventDefault()
-  console.log('dropped something')
   // something else
+  let file = e.dataTransfer.files[0]
+  uploadFile(file)
 }
 
 function pasteHandler(e) {
@@ -20,7 +20,6 @@ function pasteHandler(e) {
 
 function load() {
   const token = window.localStorage.getItem(TOKEN_KEY)
-  addEventListeners()
   if (token === null) {
     document.getElementById('upload-container').classList.add('hidden')
     document.getElementById('token-container').classList.remove('hidden')
@@ -31,8 +30,7 @@ function load() {
       }
     })
   } else {
-    // set event listeners if the token is present
-    // addEventListeners()
+    addEventListeners()
   }
 }
 
@@ -47,7 +45,7 @@ function addEventListeners() {
 function setToken() {
   let tokenInput = document.getElementById('token-input').value
   if (tokenInput.length === 0) {
-    // TODO: display error to user
+    displayError('Invalid token')
     return
   }
   window.localStorage.setItem(TOKEN_KEY, tokenInput)
@@ -66,8 +64,7 @@ async function handleFiles(e) {
     let linkContainer = document.getElementById('link-container')
     linkContainer.appendChild(linkElement)
   } catch (e) {
-    // TODO: implement error handling
-    console.log(e)    
+    displayError(e.message)
   }
 }
 
@@ -82,29 +79,31 @@ function uploadFile(file) {
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4) {
         try {
-          console.log(xhr.responseText)
-          const { link } = JSON.parse(xhr.responseText);
-          if (!link) {
-            throw new Error('No links in response');
+          if (!xhr.responseText) {
+            throw new Error('Response body is missing')
           }
-          resolve(link);
+          let response = JSON.parse(xhr.responseText)
+          const { link } = response 
+          if (!link) {
+            throw new Error(response.message || 'Unknown error when uploading')
+          }
+          resolve(link)
         } catch (e) {
-          reject(e);
+          reject(e)
         }    
       }
     }
 
     xhr.addEventListener('error', () => {
-      reject(new Error('Request failed'));
-    });
+      reject(new Error('Request failed'))
+    })
 
     xhr.addEventListener('abort', () => {
-      reject(new Error('Aborted'));
-    });
+      reject(new Error('Request aborted'))
+    })
     
     xhr.open('POST', '/upload')
     xhr.setRequestHeader('Authorization', `Bearer ${localStorage.getItem(TOKEN_KEY)}`)
-    // FIXME: upload fails with value: None
     xhr.send(formData)
   })
 }
@@ -127,7 +126,7 @@ function createLinkElement(link) {
   let svg = createSvg()
   
   svg.addEventListener('click', () => {
-    window.open(link, '_blank');
+    window.open(link, '_blank')
   })
   
   container.appendChild(svg) 
@@ -136,14 +135,25 @@ function createLinkElement(link) {
 }
 
 function createSvg() {
-  const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
   const iconPath = document.createElementNS(
     'http://www.w3.org/2000/svg',
     'path'
-  );
-  iconSvg.setAttribute('fill', '#D8DEE9');
-  iconSvg.setAttribute('viewBox', '0 0 24 24');
-  iconPath.setAttribute('d', 'M 5 3 C 3.9069372 3 3 3.9069372 3 5 L 3 19 C 3 20.093063 3.9069372 21 5 21 L 19 21 C 20.093063 21 21 20.093063 21 19 L 21 12 L 19 12 L 19 19 L 5 19 L 5 5 L 12 5 L 12 3 L 5 3 z M 14 3 L 14 5 L 17.585938 5 L 8.2929688 14.292969 L 9.7070312 15.707031 L 19 6.4140625 L 19 10 L 21 10 L 21 3 L 14 3 z');
+  )
+  iconSvg.setAttribute('fill', '#D8DEE9')
+  iconSvg.setAttribute('viewBox', '0 0 24 24')
+  iconPath.setAttribute('d', 'M 5 3 C 3.9069372 3 3 3.9069372 3 5 L 3 19 C 3 20.093063 3.9069372 21 5 21 L 19 21 C 20.093063 21 21 20.093063 21 19 L 21 12 L 19 12 L 19 19 L 5 19 L 5 5 L 12 5 L 12 3 L 5 3 z M 14 3 L 14 5 L 17.585938 5 L 8.2929688 14.292969 L 9.7070312 15.707031 L 19 6.4140625 L 19 10 L 21 10 L 21 3 L 14 3 z')
   iconSvg.appendChild(iconPath)
   return iconSvg
+}
+
+function displayError(msg) {
+  let flash = document.querySelector('#flash-message')
+  let newFlash = flash.cloneNode(true)
+  // set on first render
+  if (!newFlash.classList.contains('flash')) {
+    newFlash.classList.add('flash')
+  }
+  newFlash.innerText = 'Error: ' + msg
+  flash.parentNode.replaceChild(newFlash, flash)
 }

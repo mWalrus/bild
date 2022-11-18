@@ -4,6 +4,7 @@
   --green: #a3be8c;
   --link-fg: #88c0d0;
   --normal-fg: 216, 222, 233;
+  --error-bg: #bf616a;
 }
 
 body {
@@ -101,10 +102,34 @@ body {
 }
 
 .link-copy-container svg path {
-  fill: var(--normal-fg) !important;
+  fill: rgb(var(--normal-fg)) !important;
 }
 
 .link-copy:hover {
   color: var(--link-fg);
   text-decoration: underline;
+}
+
+.flash {
+  animation: flash 5s ease-in forwards;
+  visibility: hidden;
+  background-color: var(--error-bg);
+  padding: 1em;
+  color: rgb(var(--normal-fg));
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  font-weight: bold;
+}
+
+@keyframes flash {
+  from {
+    visibility: visible;
+    opacity: 1;
+  }
+  20% { opacity: 1 }
+  to {
+    visibility: hidden;
+    opacity: 0 
+  }
 }
