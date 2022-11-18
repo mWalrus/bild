@@ -31,9 +31,15 @@ impl<'a> FromRequest<'a> for ApiKey<'a> {
         }
 
         match req.headers().get_one("Authorization") {
-            None => Outcome::Failure((Status::BadRequest, ApiKeyError::Missing)),
+            None => {
+                req.local_cache(|| "API key is missing");
+                Outcome::Failure((Status::BadRequest, ApiKeyError::Missing))
+            }
             Some(key) if is_valid(key) => Outcome::Success(ApiKey(key)),
-            Some(_) => Outcome::Failure((Status::BadRequest, ApiKeyError::Invalid)),
+            Some(_) => {
+                req.local_cache(|| "API key is invalid");
+                Outcome::Failure((Status::BadRequest, ApiKeyError::Invalid))
+            }
         }
     }
 }
@@ -53,13 +59,17 @@ impl<'r> FromFormField<'r> for FileData<'r> {
 
         if !is_video && !is_image {
             Err(form::Error::validation(
-                "upload is neither a video or an image",
+                *field
+                    .request
+                    .local_cache(|| "upload is neither a video or an image"),
             ))?;
         }
         let mime_type = match infer::get(peeked) {
             Some(t) => t.mime_type(),
             None => Err(form::Error::validation(
-                "could not extract mime type from file",
+                *field
+                    .request
+                    .local_cache(|| "could not determine mime type of file"),
             ))?,
         };
 
@@ -73,7 +83,9 @@ impl<'r> FromFormField<'r> for FileData<'r> {
 
         let capped_bytes = field.data.open(limit).into_bytes().await?;
         if !capped_bytes.is_complete() {
-            Err(form::Error::validation("file too large"))?;
+            Err(form::Error::validation(
+                *field.request.local_cache(|| "file too large"),
+            ))?;
         }
 
         let bytes = capped_bytes.into_inner();

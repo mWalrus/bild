@@ -17,8 +17,9 @@ pub fn not_found() -> Redirect {
 }
 
 #[catch(default)]
-pub fn default(status: Status, req: &Request<'_>) -> String {
-    format!("Something went wrong: {status} ({})", req.uri())
+pub fn default(status: Status, req: &Request<'_>) -> status::Custom<Value> {
+    let err_msg = *req.local_cache(|| "");
+    status::Custom(status, json!({ "message": err_msg }))
 }
 
 #[get("/")]
@@ -39,9 +40,9 @@ pub async fn file(file: PathBuf) -> Option<NamedFile> {
 
 #[post("/upload", data = "<file>")]
 pub async fn upload(
-    file: Form<FileData<'_>>,
-    _lg: RocketGovernor<'_, RateLimitGuard>,
     _key: ApiKey<'_>,
+    _lg: RocketGovernor<'_, RateLimitGuard>,
+    file: Form<FileData<'_>>,
 ) -> status::Custom<Value> {
     let bytes = file.data;
     let ft = &file.file_type;
@@ -53,7 +54,10 @@ pub async fn upload(
     };
 
     if let Err(e) = conversion {
-        return status::Custom(Status::InternalServerError, json!({"msg": e.to_string()}));
+        return status::Custom(
+            Status::InternalServerError,
+            json!({"message": e.to_string()}),
+        );
     }
 
     let url = format!("{}/{}", *SERVER_URL, conversion.unwrap());
