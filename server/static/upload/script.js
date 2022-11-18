@@ -9,7 +9,7 @@ function dropHandler(e) {
   e.preventDefault()
   // something else
   let file = e.dataTransfer.files[0]
-  uploadFile(file)
+  handleFile(file)
 }
 
 function pasteHandler(e) {
@@ -37,7 +37,7 @@ function load() {
 function addEventListeners() {
   let fileInput = document.getElementById('file-input')
   fileInput.focus()
-  fileInput.addEventListener('change', handleFiles, false)
+  fileInput.addEventListener('change', inputHandler, false)
   document.addEventListener('dragover', dragOverHandler, false)
   document.addEventListener('drop', dropHandler, false)
 }
@@ -55,9 +55,13 @@ function setToken() {
   addEventListeners()
 }
 
-async function handleFiles(e) {
+async function inputHandler(e) {
   e.preventDefault()
   let file = e.target.files[0]
+  handleFile(file)
+}
+
+async function handleFile(file) {
   try {
     let link = await uploadFile(file)
     let linkElement = createLinkElement(link)
