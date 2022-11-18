@@ -45,7 +45,7 @@ function addEventListeners() {
 function setToken() {
   let tokenInput = document.getElementById('token-input').value
   if (tokenInput.length === 0) {
-    displayError('Invalid token')
+    displayMsg('Invalid token')
     return
   }
   window.localStorage.setItem(TOKEN_KEY, tokenInput)
@@ -68,7 +68,7 @@ async function handleFile(file) {
     let linkContainer = document.getElementById('link-container')
     linkContainer.appendChild(linkElement)
   } catch (e) {
-    displayError(e.message)
+    displayMsg(e.message)
   }
 }
 
@@ -122,7 +122,7 @@ function createLinkElement(link) {
   
   span.addEventListener('click', () => {
     navigator.clipboard.writeText(link)
-    // TODO: flash to the user that the text has been copied.
+    displayMsg('Copied link to clipboard', true)
   })
   
   container.appendChild(span)
@@ -150,13 +150,25 @@ function createSvg() {
   return iconSvg
 }
 
-function displayError(msg) {
+function displayMsg(msg, success = false) {
   let flash = document.querySelector('#flash-message')
+
+  flash.classList.remove('flash-success')
+  flash.classList.remove('flash-error')
+
   let newFlash = flash.cloneNode(true)
   // set on first render
   if (!newFlash.classList.contains('flash')) {
     newFlash.classList.add('flash')
   }
-  newFlash.innerText = 'Error: ' + msg
+  
+  if (success) {
+    newFlash.classList.add('flash-success')
+    newFlash.innerText = msg
+  } else {
+    newFlash.classList.add('flash-error')
+    newFlash.innerText = 'Error: ' + msg
+  }
+  
   flash.parentNode.replaceChild(newFlash, flash)
 }

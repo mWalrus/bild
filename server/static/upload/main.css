@@ -111,15 +111,25 @@ body {
 }
 
 .flash {
-  animation: flash 5s ease-in forwards;
+  animation: flash 4s ease-in forwards;
   visibility: hidden;
-  background-color: var(--error-bg);
   padding: 1em;
-  color: rgb(var(--normal-fg));
   position: absolute;
   top: 1em;
   right: 1em;
   font-weight: bold;
+  font-size: .8em;
+  border-radius: .3em;
+}
+
+.flash-error {
+  background-color: var(--error-bg);
+  color: rgb(var(--normal-fg));
+}
+
+.flash-success {
+  background-color: var(--green);
+  color: var(--card-bg);
 }
 
 @keyframes flash {
@@ -127,7 +137,7 @@ body {
     visibility: visible;
     opacity: 1;
   }
-  20% { opacity: 1 }
+  60% { opacity: 1 }
   to {
     visibility: hidden;
     opacity: 0 
