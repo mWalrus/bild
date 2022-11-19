@@ -114,13 +114,13 @@ pub fn video_to_mp4(bytes: &[u8], mime_type: &str) -> Result<String, ConversionE
     // https://askubuntu.com/a/396906
     let ffmpeg_command = if mime_type == "video/x-matroska" {
         format!(
-            "ffmpeg -i {} -codec copy {}",
+            "ffmpeg -hide_banner -loglevel error -i {} -codec copy {}",
             tmp_path.to_str().unwrap(),
             new_vid_path.to_str().unwrap()
         )
     } else {
         format!(
-            "ffmpeg -i {} {}",
+            "ffmpeg -hide_banner -loglevel error -i {} {}",
             tmp_path.to_str().unwrap(),
             new_vid_path.to_str().unwrap()
         )
