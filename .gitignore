@@ -1,7 +1,6 @@
 /server/target
-/server/static/uploads
+*uploads
 /server/performance
 /target
 /auth/target
 THOUGHTS.md
-static

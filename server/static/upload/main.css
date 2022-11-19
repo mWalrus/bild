@@ -1,0 +1,167 @@
+:root {
+  --bg: #3B4252;
+  --card-bg: #2e3440;
+  --green: #a3be8c;
+  --link-fg: #88c0d0;
+  --normal-fg: 216, 222, 233;
+  --error-bg: #bf616a;
+  --soft-blue: #81a1c1;
+}
+
+body {
+  background-color: var(--bg);
+  font-family: sans-serif;
+  margin: 0;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+
+.hidden {
+  visibility: hidden;
+  height: 0;
+}
+
+.container {
+  color: rgb(var(--normal-fg));
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  align-items: center;
+}
+
+.container p {
+  margin: 0;
+}
+
+.file-input {
+  display: none;
+}
+
+.input-label {
+  cursor: pointer;
+  border: 1px solid rgb(var(--normal-fg));
+  padding: 1em;
+  border-radius: .3em;
+}
+
+.input-label:hover {
+  background-color: var(--soft-blue);
+  border-color: var(--soft-blue);
+  color: var(--bg);
+}
+
+.token-input:hover,
+#submit-token-btn:hover {
+  background-color: rgba(var(--normal-fg), 0.3);
+}
+
+.token-input {
+  outline: none;
+  border: 1px solid rgb(var(--normal-fg));
+  font-size: 1.5em;
+  color: rgb(var(--normal-fg));
+  background-color: transparent;
+  border-radius: .2em;
+}
+
+#submit-token-btn {
+  border: none;
+  outline: none;
+  background-color: var(--green);
+  padding: .5em 1em;
+  cursor: pointer;
+  border-radius: .2em;
+}
+
+#link-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.link-copy-container {
+  background-color: var(--card-bg);
+  padding: 1em;
+  border-radius: .3em;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  gap: .5em;
+  justify-content: center;
+}
+
+.link-copy {
+  line-height: 1.6em;
+}
+
+.link-copy-container svg {
+  display: inline-block;
+  height: 1.5em;
+  width: auto;
+}
+
+.link-copy-container svg path {
+  fill: rgb(var(--normal-fg)) !important;
+}
+
+.link-copy:hover {
+  color: var(--link-fg);
+  text-decoration: underline;
+}
+
+.flash {
+  animation: flash 4s ease-in forwards;
+  visibility: hidden;
+  padding: 1em;
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  font-weight: bold;
+  font-size: .8em;
+}
+
+.flash-error {
+  background-color: var(--error-bg);
+  color: rgb(var(--normal-fg));
+}
+
+.flash-success {
+  background-color: var(--green);
+  color: var(--card-bg);
+}
+
+#clear-token {
+  color: var(--soft-blue);
+  position: absolute;
+  bottom: 1em;
+  right: 1em;
+  border-radius: .3em;
+  border: 1px solid var(--soft-blue);
+  padding: .3rem .6em;
+  cursor: pointer;
+}
+
+#clear-token:hover {
+  color: rgb(var(--normal-fg));
+  background-color: var(--error-bg);
+  border: 1px solid var(--error-bg);
+}
+
+@keyframes flash {
+  from {
+    visibility: visible;
+    opacity: 1;
+  }
+  60% { opacity: 1 }
+  to {
+    visibility: hidden;
+    opacity: 0 
+  }
+}

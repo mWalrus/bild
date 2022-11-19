@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Bild - Upload</title>
+  <link rel="stylesheet" type="text/css" href="upload/main.css">
+  <script type="text/javascript" src="upload/script.js"></script>
+</head>
+
+<body onload="load()">
+  <div class="wrapper">
+    <span id="flash-message"></span>
+    <div class="container" id="upload-container">
+      <p>Drop files anywhere or click below</p>
+      <label class="input-label">
+        <input id="file-input" class="file-input" type="file" contenteditable="true" name="data" />
+        Choose files
+      </label>
+      <div id="link-container"></div>
+    </div>
+    <div id="token-container" class="container hidden">
+      <p>Paste auth token here</p>
+      <input type="password" id="token-input" class="token-input" contenteditable="true" />
+      <input type="button" value="Set" onclick="setToken()" id="submit-token-btn" />
+    </div>
+    <span id="clear-token">&#x2715; clear token</span>
+  </div>
+</body>
+
+</html>

@@ -3,7 +3,9 @@ use crate::{gen, UPLOADS_DIR};
 use image::codecs::gif::GifDecoder;
 use image::io::Reader;
 use image::{AnimationDecoder, ImageDecoder};
+use std::env::temp_dir;
 use std::io::Cursor;
+use std::process::Command;
 use std::{fs::File, io::Write, path::PathBuf};
 use webp::{Encoder, WebPMemory};
 use webp_animation::Encoder as AWebPEncoder;
@@ -84,9 +86,57 @@ pub fn gif_to_webp(bytes: &[u8]) -> Result<String, ConversionError> {
         .finalize(final_timestamp)
         .map_err(ConversionError::AWebPEncoder)?;
     let new_webp_file_name = gen::file_name();
-    let output = format!("static/uploads/{new_webp_file_name}.webp");
+    let output = format!("{UPLOADS_DIR}/{new_webp_file_name}.webp");
 
     std::fs::write(output, webp_data).map_err(ConversionError::IO)?;
 
     Ok(new_webp_file_name)
+}
+
+pub fn video_to_mp4(bytes: &[u8], mime_type: &str) -> Result<String, ConversionError> {
+    let new_vid_name = gen::file_name();
+    let new_vid_path = PathBuf::from(UPLOADS_DIR)
+        .join(&new_vid_name)
+        .with_extension("mp4");
+
+    // do nothing if the file is already mp4
+    if mime_type == "video/mp4" {
+        std::fs::write(new_vid_path, bytes).map_err(ConversionError::IO)?;
+        return Ok(new_vid_name);
+    }
+
+    // FIXME: temp solution until I can figure out how to feed ffmpeg
+    //        the image bytes.
+    let tmp_path = temp_dir().join(format!("{new_vid_name}.bild"));
+    std::fs::write(&tmp_path, bytes).map_err(ConversionError::IO)?;
+
+    // just switch the containers if mkv
+    // https://askubuntu.com/a/396906
+    let ffmpeg_command = if mime_type == "video/x-matroska" {
+        format!(
+            "ffmpeg -hide_banner -loglevel error -i {} -codec copy {}",
+            tmp_path.to_str().unwrap(),
+            new_vid_path.to_str().unwrap()
+        )
+    } else {
+        format!(
+            "ffmpeg -hide_banner -loglevel error -i {} {}",
+            tmp_path.to_str().unwrap(),
+            new_vid_path.to_str().unwrap()
+        )
+    };
+
+    let status = Command::new("sh")
+        .args(["-c", &ffmpeg_command])
+        .status()
+        .map_err(ConversionError::IO)?;
+
+    if !status.success() {
+        Err(ConversionError::Ffmpeg)?;
+    }
+    std::thread::spawn(move || {
+        // try to remove the temp file
+        std::fs::remove_file(tmp_path).unwrap_or_else(|_| ());
+    });
+    Ok(new_vid_name)
 }

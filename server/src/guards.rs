@@ -31,9 +31,15 @@ impl<'a> FromRequest<'a> for ApiKey<'a> {
         }
 
         match req.headers().get_one("Authorization") {
-            None => Outcome::Failure((Status::BadRequest, ApiKeyError::Missing)),
+            None => {
+                req.local_cache(|| "API key is missing");
+                Outcome::Failure((Status::BadRequest, ApiKeyError::Missing))
+            }
             Some(key) if is_valid(key) => Outcome::Success(ApiKey(key)),
-            Some(_) => Outcome::Failure((Status::BadRequest, ApiKeyError::Invalid)),
+            Some(_) => {
+                req.local_cache(|| "API key is invalid");
+                Outcome::Failure((Status::BadRequest, ApiKeyError::Invalid))
+            }
         }
     }
 }
@@ -45,7 +51,7 @@ impl<'r> FromFormField<'r> for FileData<'r> {
         let is_video = infer::is_video(peeked);
         let is_image = infer::is_image(peeked);
 
-        let img_limit = field
+        let limit = field
             .request
             .limits()
             .get("upload/image")
@@ -53,25 +59,39 @@ impl<'r> FromFormField<'r> for FileData<'r> {
 
         if !is_video && !is_image {
             Err(form::Error::validation(
-                "upload is neither a video or an image",
+                *field
+                    .request
+                    .local_cache(|| "upload is neither a video or an image"),
             ))?;
         }
         let mime_type = match infer::get(peeked) {
             Some(t) => t.mime_type(),
             None => Err(form::Error::validation(
-                "could not extract mime type from file",
+                *field
+                    .request
+                    .local_cache(|| "could not determine mime type of file"),
             ))?,
         };
 
-        let (limit, file_type) = if is_image && mime_type == "image/gif" {
-            (img_limit, FileType::Gif)
+        let file_type = if is_image && mime_type == "image/gif" {
+            FileType::Gif
+        } else if is_video {
+            FileType::Video(mime_type)
         } else {
-            (img_limit, FileType::Image)
+            FileType::Image
         };
 
-        let capped_bytes = field.data.open(limit).into_bytes().await?;
+        let capped_bytes = match field.data.open(limit).into_bytes().await {
+            Ok(bytes) => bytes,
+            Err(_) => Err(form::Error::validation(
+                *field.request.local_cache(|| "Failed to read file"),
+            ))?,
+        };
+
         if !capped_bytes.is_complete() {
-            Err(form::Error::validation("file too large"))?;
+            Err(form::Error::validation(
+                *field.request.local_cache(|| "file too large"),
+            ))?;
         }
 
         let bytes = capped_bytes.into_inner();
