@@ -92,6 +92,8 @@ async function inputHandler(e) {
 async function handleFile(file) {
   try {
     let link = await uploadFile(file)
+    
+    displayMsg('Uploaded ' + file.name, true)
 
     let linkElement = createLinkElement(link)
     let linkContainer = document.getElementById('link-container')
