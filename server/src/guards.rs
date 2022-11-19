@@ -81,7 +81,13 @@ impl<'r> FromFormField<'r> for FileData<'r> {
             FileType::Image
         };
 
-        let capped_bytes = field.data.open(limit).into_bytes().await?;
+        let capped_bytes = match field.data.open(limit).into_bytes().await {
+            Ok(bytes) => bytes,
+            Err(_) => Err(form::Error::validation(
+                *field.request.local_cache(|| "Failed to read file"),
+            ))?,
+        };
+
         if !capped_bytes.is_complete() {
             Err(form::Error::validation(
                 *field.request.local_cache(|| "file too large"),

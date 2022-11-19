@@ -109,22 +109,33 @@ function uploadFile(file) {
 
     let xhr = new XMLHttpRequest()
     
+    let prevReadyState = 0
+    
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4) {
         try {
-          if (!xhr.responseText) {
-            throw new Error('Response body is missing')
+          // the request is done but failed to send
+          if (prevReadyState === 1) {
+            throw new Error('File might be too large')
           }
+
+          if (!xhr.responseText) {
+            throw new Error('Body is missing in response')
+          }
+
           let response = JSON.parse(xhr.responseText)
           const { link } = response 
           if (!link) {
-            throw new Error(response.message || 'Unknown error when uploading')
+            throw new Error(response.message ?? 'Unknown error when uploading')
           }
           resolve(link)
         } catch (e) {
           reject(e)
         }    
       }
+      
+      // keep track of last state change
+      prevReadyState = xhr.readyState
     }
 
     xhr.addEventListener('error', () => {
