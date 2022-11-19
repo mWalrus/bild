@@ -143,6 +143,12 @@ body {
   cursor: pointer;
 }
 
+#clear-token:hover {
+  color: rgb(var(--normal-fg));
+  background-color: var(--error-bg);
+  border: 1px solid var(--error-bg);
+}
+
 @keyframes flash {
   from {
     visibility: visible;
