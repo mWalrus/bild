@@ -5,6 +5,7 @@
   --link-fg: #88c0d0;
   --normal-fg: 216, 222, 233;
   --error-bg: #bf616a;
+  --soft-blue: #81a1c1;
 }
 
 body {
@@ -119,7 +120,6 @@ body {
   right: 1em;
   font-weight: bold;
   font-size: .8em;
-  border-radius: .3em;
 }
 
 .flash-error {
@@ -130,6 +130,17 @@ body {
 .flash-success {
   background-color: var(--green);
   color: var(--card-bg);
+}
+
+#clear-token {
+  color: var(--soft-blue);
+  position: absolute;
+  bottom: 1em;
+  right: 1em;
+  border-radius: .3em;
+  border: 1px solid var(--soft-blue);
+  padding: .3rem .6em;
+  cursor: pointer;
 }
 
 @keyframes flash {

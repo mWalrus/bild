@@ -7,13 +7,13 @@ function dragOverHandler(e) {
 
 function dropHandler(e) {
   e.preventDefault()
-  // something else
   let file = e.dataTransfer.files[0]
   handleFile(file)
 }
 
 function pasteHandler(e) {
   e.preventDefault()
+  // TODO: this doesn't work in the current version
   let items = (e.clipboardData || e.originalEvent.clipboardData).items
   console.log(JSON.stringify(items))
 }
@@ -21,8 +21,15 @@ function pasteHandler(e) {
 function load() {
   const token = window.localStorage.getItem(TOKEN_KEY)
   if (token === null) {
+    // remove any lingering event listeners
+    document.removeEventListener('dragover', dragOverHandler)
+    document.removeEventListener('drop', dropHandler)
+
+    // apply the appropriate classes
     document.getElementById('upload-container').classList.add('hidden')
     document.getElementById('token-container').classList.remove('hidden')
+
+    // allows the user to paste and press enter
     document.getElementById('token-input').addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault()
@@ -38,8 +45,14 @@ function addEventListeners() {
   let fileInput = document.getElementById('file-input')
   fileInput.focus()
   fileInput.addEventListener('change', inputHandler, false)
+
   document.addEventListener('dragover', dragOverHandler, false)
   document.addEventListener('drop', dropHandler, false)
+
+  document.querySelector('#clear-token').addEventListener('click', () => {
+    window.localStorage.removeItem(TOKEN_KEY)
+    load()
+  })
 }
 
 async function setToken() {
@@ -66,6 +79,7 @@ async function setToken() {
 
   document.getElementById('upload-container').classList.remove('hidden')
   document.getElementById('token-container').classList.add('hidden')
+
   addEventListeners()
 }
 
@@ -78,6 +92,7 @@ async function inputHandler(e) {
 async function handleFile(file) {
   try {
     let link = await uploadFile(file)
+
     let linkElement = createLinkElement(link)
     let linkContainer = document.getElementById('link-container')
     linkContainer.appendChild(linkElement)
