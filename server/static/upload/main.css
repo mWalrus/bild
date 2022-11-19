@@ -51,7 +51,12 @@ body {
   border-radius: .3em;
 }
 
-.input-label:hover,
+.input-label:hover {
+  background-color: var(--soft-blue);
+  border-color: var(--soft-blue);
+  color: var(--bg);
+}
+
 .token-input:hover,
 #submit-token-btn:hover {
   background-color: rgba(var(--normal-fg), 0.3);
