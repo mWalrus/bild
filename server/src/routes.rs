@@ -31,12 +31,21 @@ pub fn index() -> Redirect {
 #[get("/<file..>")]
 pub async fn file(file: PathBuf) -> Option<NamedFile> {
     let file_path = Path::new("uploads/").join(file);
-    if file_path.extension().is_some() {
-        return NamedFile::open(file_path).await.ok();
+
+    let path_with_ext = if file_path.extension().is_some() {
+        Some(file_path)
     } else if file_path.with_extension("webp").exists() {
-        return NamedFile::open(file_path.with_extension("webp")).await.ok();
+        Some(file_path.with_extension("webp"))
+    } else if file_path.with_extension("mp4").exists() {
+        Some(file_path.with_extension("mp4"))
+    } else {
+        None
+    };
+
+    match path_with_ext {
+        Some(p) => NamedFile::open(p).await.ok(),
+        None => None,
     }
-    None
 }
 
 #[post("/token-validation")]
