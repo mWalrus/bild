@@ -55,6 +55,12 @@ pub async fn token_validation(_key: ApiKey<'_>) -> status::Accepted<()> {
     status::Accepted::<()>(None)
 }
 
+// workaround route for chatterinos use of the GET method for deletion requests.
+#[get("/delete/<name>")]
+pub async fn delete_upload_get(key: ApiKey<'_>, name: PathBuf) -> status::Custom<Value> {
+    delete_upload(key, name).await
+}
+
 #[delete("/delete/<name>")]
 pub async fn delete_upload(_key: ApiKey<'_>, name: PathBuf) -> status::Custom<Value> {
     let res = match get_file_from_path(&name) {
