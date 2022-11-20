@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Bild - Delete</title>
+  <link rel="stylesheet" type="text/css" href="/common/styles.css">
+  <style>
+    #delete-button {
+      padding: 1.3em 3em;
+      font-size: 1.5em;
+      border-radius: .3em;
+      border: 1px solid rgb(var(--normal-fg));
+      color: rgb(var(--normal-fg));
+      cursor: pointer;
+    }
+
+    #delete-button:hover {
+      background-color: var(--error-bg);
+      border-color: var(--error-bg);
+    }
+  </style>
+  <script type="text/javascript" src="/common/utils.js"></script>
+  <script>
+    function initDelete() {
+      const url = window.location.pathname
+      deleteFile(url)
+    }
+  </script>
+</head>
+
+<body>
+  <div class="wrapper">
+    <span id="flash-message"></span>
+    <span onclick="initDelete()" id="delete-button">Delete file</span>
+  </div>
+</body>
+
+</html>
