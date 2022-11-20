@@ -1,0 +1,57 @@
+:root {
+  --bg: #3B4252;
+  --card-bg: #2e3440;
+  --green: #a3be8c;
+  --link-fg: #88c0d0;
+  --normal-fg: 216, 222, 233;
+  --error-bg: #bf616a;
+  --soft-blue: #81a1c1;
+}
+
+body {
+  background-color: var(--bg);
+  font-family: sans-serif;
+  margin: 0;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+
+.flash {
+  animation: flash 4s ease-in forwards;
+  visibility: hidden;
+  padding: 1em;
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  font-weight: bold;
+  font-size: .8em;
+}
+
+.flash-error {
+  background-color: var(--error-bg);
+  color: rgb(var(--normal-fg));
+}
+
+.flash-success {
+  background-color: var(--green);
+  color: var(--card-bg);
+}
+
+@keyframes flash {
+  from {
+    visibility: visible;
+    opacity: 1;
+  }
+  60% { opacity: 1 }
+  to {
+    visibility: hidden;
+    opacity: 0 
+  }
+}
