@@ -55,7 +55,8 @@ fn rocket() -> _ {
                 routes::index,
                 routes::upload,
                 routes::file,
-                routes::token_validation
+                routes::token_validation,
+                routes::delete_upload
             ],
         )
         .mount(

@@ -9,7 +9,21 @@ use rocket::response::{status, Redirect};
 use rocket::serde::json::{json, Value};
 use rocket::Request;
 use rocket_governor::RocketGovernor;
+use std::fs;
 use std::path::{Path, PathBuf};
+
+fn get_file_from_path(file: PathBuf) -> Option<PathBuf> {
+    let file_path = Path::new("uploads/").join(file);
+    if file_path.extension().is_some() {
+        Some(file_path)
+    } else if file_path.with_extension("webp").exists() {
+        Some(file_path.with_extension("webp"))
+    } else if file_path.with_extension("mp4").exists() {
+        Some(file_path.with_extension("mp4"))
+    } else {
+        None
+    }
+}
 
 #[catch(404)]
 pub fn not_found() -> Redirect {
@@ -30,19 +44,7 @@ pub fn index() -> Redirect {
 
 #[get("/<file..>")]
 pub async fn file(file: PathBuf) -> Option<NamedFile> {
-    let file_path = Path::new("uploads/").join(file);
-
-    let path_with_ext = if file_path.extension().is_some() {
-        Some(file_path)
-    } else if file_path.with_extension("webp").exists() {
-        Some(file_path.with_extension("webp"))
-    } else if file_path.with_extension("mp4").exists() {
-        Some(file_path.with_extension("mp4"))
-    } else {
-        None
-    };
-
-    match path_with_ext {
+    match get_file_from_path(file) {
         Some(p) => NamedFile::open(p).await.ok(),
         None => None,
     }
@@ -51,6 +53,22 @@ pub async fn file(file: PathBuf) -> Option<NamedFile> {
 #[post("/token-validation")]
 pub async fn token_validation(_key: ApiKey<'_>) -> status::Accepted<()> {
     status::Accepted::<()>(None)
+}
+
+#[delete("/delete/<name>")]
+pub async fn delete_upload(_key: ApiKey<'_>, name: PathBuf) -> status::Custom<Value> {
+    let res = match get_file_from_path(name) {
+        Some(path) => fs::remove_file(path),
+        None => return status::Custom(Status::NotFound, json!({"message": "No such file"})),
+    };
+
+    match res {
+        Ok(()) => status::Custom(Status::Ok, json!({"message": "Deleted file"})),
+        Err(e) => status::Custom(
+            Status::InternalServerError,
+            json!({"message": e.to_string()}),
+        ),
+    }
 }
 
 #[post("/upload", data = "<file>")]
@@ -68,13 +86,24 @@ pub async fn upload(
         FileType::Video(mime_type) => converter::video_to_mp4(bytes, mime_type),
     };
 
-    if let Err(e) = conversion {
-        return status::Custom(
-            Status::InternalServerError,
-            json!({"message": e.to_string()}),
-        );
-    }
+    let file_name = match conversion {
+        Ok(file_name) => file_name,
+        Err(e) => {
+            return status::Custom(
+                Status::InternalServerError,
+                json!({"message": e.to_string()}),
+            )
+        }
+    };
 
-    let url = format!("{}/{}", *SERVER_URL, conversion.unwrap());
-    status::Custom(Status::Ok, json!({ "link": url }))
+    let link = format!("{}/{}", *SERVER_URL, file_name);
+    let delete_link = format!("{}/delete/{}", *SERVER_URL, file_name);
+
+    status::Custom(
+        Status::Ok,
+        json!({
+            "link": link,
+            "delete_link": delete_link
+        }),
+    )
 }
