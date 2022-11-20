@@ -57,7 +57,7 @@ fn rocket() -> _ {
                 routes::file,
                 routes::token_validation,
                 routes::delete_upload,
-                routes::delete_upload_get,
+                routes::get_delete
             ],
         )
         .mount(
@@ -65,7 +65,11 @@ fn rocket() -> _ {
             FileServer::from(concat!(env!("CARGO_MANIFEST_DIR"), "/static/404")).rank(-2),
         )
         .mount(
+            "/common",
+            FileServer::from(concat!(env!("CARGO_MANIFEST_DIR"), "/static/common")).rank(-3),
+        )
+        .mount(
             "/upload",
-            FileServer::from(concat!(env!("CARGO_MANIFEST_DIR"), "/static/upload")).rank(-3),
+            FileServer::from(concat!(env!("CARGO_MANIFEST_DIR"), "/static/upload")).rank(-4),
         )
 }
