@@ -1,5 +1,7 @@
 const TOKEN_KEY = 'bild-auth-token'
-const EXT_URL_SVG = new DOMParser().parseFromString('<svg fill="#D8DEE9" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="24px" height="24px"><path d="M 5 3 C 3.9069372 3 3 3.9069372 3 5 L 3 19 C 3 20.093063 3.9069372 21 5 21 L 19 21 C 20.093063 21 21 20.093063 21 19 L 21 12 L 19 12 L 19 19 L 5 19 L 5 5 L 12 5 L 12 3 L 5 3 z M 14 3 L 14 5 L 17.585938 5 L 8.2929688 14.292969 L 9.7070312 15.707031 L 19 6.4140625 L 19 10 L 21 10 L 21 3 L 14 3 z"/></svg>', 'text/html').body.firstChild
+const SVG_PATH_TRASH_OUTER = 'M20 2h-4v-.85C16 .52 15.48 0 14.85 0h-5.7C8.52 0 8 .52 8 1.15V2H4c-1.1 0-2 .9-2 2 0 .74.4 1.38 1 1.73v14.02C3 22.09 4.91 24 7.25 24h9.5c2.34 0 4.25-1.91 4.25-4.25V5.73c.6-.35 1-.99 1-1.73 0-1.1-.9-2-2-2zm-1 17.75c0 1.24-1.01 2.25-2.25 2.25h-9.5C6.01 22 5 20.99 5 19.75V6h14v13.75z'
+const SVG_PATH_TRASH_INNER = 'M8 20.022c-.553 0-1-.447-1-1v-10c0-.553.447-1 1-1s1 .447 1 1v10c0 .553-.447 1-1 1zm8 0c-.553 0-1-.447-1-1v-10c0-.553.447-1 1-1s1 .447 1 1v10c0 .553-.447 1-1 1zm-4 0c-.553 0-1-.447-1-1v-10c0-.553.447-1 1-1s1 .447 1 1v10c0 .553-.447 1-1 1z'
+const SVG_PATH_OPEN_LINK = 'M 5 3 C 3.9069372 3 3 3.9069372 3 5 L 3 19 C 3 20.093063 3.9069372 21 5 21 L 19 21 C 20.093063 21 21 20.093063 21 19 L 21 12 L 19 12 L 19 19 L 5 19 L 5 5 L 12 5 L 12 3 L 5 3 z M 14 3 L 14 5 L 17.585938 5 L 8.2929688 14.292969 L 9.7070312 15.707031 L 19 6.4140625 L 19 10 L 21 10 L 21 3 L 14 3 z'
 
 function dragOverHandler(e) {
   e.preventDefault()
@@ -91,11 +93,11 @@ async function inputHandler(e) {
 
 async function handleFile(file) {
   try {
-    let link = await uploadFile(file)
+    let links = await uploadFile(file)
     
     displayMsg('Uploaded ' + file.name, true)
 
-    let linkElement = createLinkElement(link)
+    let linkElement = createLinkElement(links)
     let linkContainer = document.getElementById('link-container')
     linkContainer.appendChild(linkElement)
   } catch (e) {
@@ -126,11 +128,11 @@ function uploadFile(file) {
           }
 
           let response = JSON.parse(xhr.responseText)
-          const { link } = response 
-          if (!link) {
+          const { link, delete_link } = response 
+          if (!link || !delete_link) {
             throw new Error(response.message ?? 'Unknown error when uploading')
           }
-          resolve(link)
+          resolve({link, deleteLink: delete_link})
         } catch (e) {
           reject(e)
         }    
@@ -154,9 +156,15 @@ function uploadFile(file) {
   })
 }
 
-function createLinkElement(link) {
+function createLinkElement(links) {
+  const {link, deleteLink} = links
+
+  
   let container = document.createElement('div')
   container.classList.add('link-copy-container')
+
+  let fileName = link.slice(link.lastIndexOf('/') + 1)
+  container.id = fileName
 
   let span = document.createElement('span')
   span.classList.add('link-copy')
@@ -167,28 +175,54 @@ function createLinkElement(link) {
     displayMsg('Copied link to clipboard', true)
   })
   
-  container.appendChild(span)
   
-  let svg = createSvg()
-  
-  svg.addEventListener('click', () => {
+  let open_svg = createSvg([SVG_PATH_OPEN_LINK])
+  open_svg.classList.add('open-external')
+  open_svg.addEventListener('click', () => {
     window.open(link, '_blank')
   })
+
+  let delete_svg = createSvg([SVG_PATH_TRASH_OUTER, SVG_PATH_TRASH_INNER])
+  delete_svg.classList.add('delete-file')
+  delete_svg.addEventListener('click', () => {
+    deleteFile(deleteLink, fileName)
+    container.style.display = 'none'
+  })
   
-  container.appendChild(svg) 
+  container.appendChild(span)
+  container.appendChild(open_svg)
+  container.appendChild(delete_svg)
   
   return container
 }
 
-function createSvg() {
+function deleteFile(link) {
+    fetch(link, {
+      method: 'DELETE',
+      headers: {
+        authorization: `Bearer ${window.localStorage.getItem(TOKEN_KEY)}`
+      }
+    })
+    .then(res => res.json().then(json => ({status: res.status, json})))
+    .then(({status, json}) => {
+      displayMsg(json.message, status === 200)
+    })
+}
+
+function createSvg(paths) {
   const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-  const iconPath = document.createElementNS(
-    'http://www.w3.org/2000/svg',
-    'path'
-  )
   iconSvg.setAttribute('viewBox', '0 0 24 24')
-  iconPath.setAttribute('d', 'M 5 3 C 3.9069372 3 3 3.9069372 3 5 L 3 19 C 3 20.093063 3.9069372 21 5 21 L 19 21 C 20.093063 21 21 20.093063 21 19 L 21 12 L 19 12 L 19 19 L 5 19 L 5 5 L 12 5 L 12 3 L 5 3 z M 14 3 L 14 5 L 17.585938 5 L 8.2929688 14.292969 L 9.7070312 15.707031 L 19 6.4140625 L 19 10 L 21 10 L 21 3 L 14 3 z')
-  iconSvg.appendChild(iconPath)
+  
+  // allows for more complex svgs to be created
+  for (let path of paths) {
+    const iconPath = document.createElementNS(
+      'http://www.w3.org/2000/svg',
+      'path'
+    )
+    iconPath.setAttribute('d', path)
+    iconSvg.appendChild(iconPath)
+  }
+
   return iconSvg
 }
 

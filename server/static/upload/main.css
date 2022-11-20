@@ -94,11 +94,7 @@ body {
   display: flex;
   flex-direction: row;
   gap: .5em;
-  justify-content: center;
-}
-
-.link-copy {
-  line-height: 1.6em;
+  align-items: center;
 }
 
 .link-copy-container svg {
@@ -108,12 +104,25 @@ body {
 }
 
 .link-copy-container svg path {
-  fill: rgb(var(--normal-fg)) !important;
+  fill: rgb(var(--normal-fg));
 }
 
 .link-copy:hover {
   color: var(--link-fg);
   text-decoration: underline;
+}
+
+.link-copy-container .open-external:hover > path {
+  fill: var(--soft-blue);
+}
+
+.link-copy-container .delete-file {
+  height: 20px;
+  width: auto;
+}
+
+.link-copy-container .delete-file:hover > path {
+  fill: var(--error-bg);
 }
 
 .flash {
