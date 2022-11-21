@@ -9,12 +9,32 @@
       padding: 1.3em 3em;
       font-size: 1.5em;
       border-radius: .3em;
+    }
+
+    .hint {
+      color: rgb(var(--normal-fg));
+      padding: 1em 0;
+      display: none;
+    }
+
+    .hint a {
+      color: var(--soft-blue);
+    }
+
+    .enabled {
       border: 1px solid rgb(var(--normal-fg));
       color: rgb(var(--normal-fg));
       cursor: pointer;
     }
 
-    #delete-button:hover {
+    .disabled {
+      background-color: #5F6D87;
+      border-color: #5F6D87;
+      color: rgb(var(--normal-fg));
+      cursor: normal;
+    }
+
+    #delete-button.enabled:hover {
       background-color: var(--error-bg);
       border-color: var(--error-bg);
     }
@@ -22,18 +42,33 @@
   <script type="text/javascript" src="/common/utils.js"></script>
   <script>
     function initDelete() {
+      if (document.getElementById('delete-button').classList.contains('disabled')) return
       const url = window.location.pathname
       deleteFile(url)
     }
 
-    // TODO: check for auth token in local storage on load
+    function checkToken() {
+      let deleteButton = document.getElementById('delete-button')
+
+      if (!window.localStorage.getItem(TOKEN_KEY)) {
+        displayMsg('Authorization token missing')
+
+        deleteButton.classList.add('disabled')
+
+        document.querySelector('.hint').style.display = 'block'
+      } else {
+        deleteButton.classList.add('enabled')
+      }
+    }
+
   </script>
 </head>
 
-<body>
+<body onload="checkToken()">
   <div class="wrapper">
     <span id="flash-message"></span>
     <span onclick="initDelete()" id="delete-button">Delete file</span>
+    <span class="hint">Set your authorization token <a href="/upload">here</a></span>
   </div>
 </body>
 
