@@ -57,8 +57,12 @@ fn rocket() -> _ {
                 routes::file,
                 routes::token_validation,
                 routes::delete_upload,
-                routes::get_delete
+                routes::get_delete,
             ],
+        )
+        .mount(
+            "/",
+            FileServer::from(concat!(env!("CARGO_MANIFEST_DIR"), "/static/favicon")).rank(-6),
         )
         .mount(
             "/404",
