@@ -12,11 +12,11 @@
 - [x] change routes to mount to / instead of /i
 - [x] Update README with installer instructions
 - [x] Support video upload
-- [ ] Error handling
+- [x] Error handling
     - [x] Update README with env vars
     - [x] Test video upload if it still works
         - [x] Fix video upload
-    - [ ] Propagate the error to the catcher
+    - [x] Propagate the error to the catcher
 - [ ] Preserve frames in gif uploads
     - [x] basic animated webp conversion
     - [ ] preserve frame delays
@@ -26,6 +26,7 @@
 # Bugs
 - [ ] Throws 422 Unprocessable Entity when 429 would be the correct code
 - [ ] Throws "file too large" on video of size 17MiB (limit is 20MiB)
+    - This might be due to nginx.
 
 # Auth
 - [x] arg for only printing the raw bearer token
@@ -48,6 +49,3 @@
 - [x] additional dependencies
     - [x] ffmpeg
 - [x] Ask for vid and img limits in installer
-
-# Misc
-- [x] gitlab ci
