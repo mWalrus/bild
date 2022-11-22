@@ -1,10 +1,14 @@
+:root {
+  --lighter-bg: #4c566a;
+}
+
 .hidden {
   visibility: hidden;
   height: 0;
 }
 
 .container {
-  color: rgb(var(--normal-fg));
+  color: var(--fg);
   display: flex;
   flex-direction: column;
   gap: 1em;
@@ -21,38 +25,52 @@
 
 .input-label {
   cursor: pointer;
-  border: 1px solid rgb(var(--normal-fg));
+  border: 1px solid var(--fg);
   padding: 1em;
   border-radius: .3em;
 }
 
-.input-label:hover {
+.input-label:hover,
+.input-label:active {
   background-color: var(--soft-blue);
   border-color: var(--soft-blue);
   color: var(--bg);
 }
 
-.token-input:hover,
-#submit-token-btn:hover {
-  background-color: rgba(var(--normal-fg), 0.3);
+.token-input-container {
+  height: 2em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: .5em;
+  box-sizing: border-box;
 }
 
 .token-input {
   outline: none;
-  border: 1px solid rgb(var(--normal-fg));
-  font-size: 1.5em;
-  color: rgb(var(--normal-fg));
-  background-color: transparent;
+  color: var(--dark-bg);
+  padding: 0 1em;
+  background-color: var(--fg);
   border-radius: .2em;
+  border: none;
+  height: 100%;
 }
 
 #submit-token-btn {
   border: none;
   outline: none;
-  background-color: var(--green);
-  padding: .5em 1em;
+  background-color: var(--fg);
   cursor: pointer;
   border-radius: .2em;
+  height: 100%;
+  padding: 0 1em;
+  font-size: 1.5em;
+  color: var(--lighter-bg);
+}
+
+#submit-token-btn:hover,
+#submit-token-btn:active {
+  background-color: var(--success);
 }
 
 #link-container {
@@ -62,7 +80,7 @@
 }
 
 .link-copy-container {
-  background-color: var(--card-bg);
+  background-color: var(---bg);
   padding: 1em;
   border-radius: .3em;
   cursor: pointer;
@@ -79,15 +97,17 @@
 }
 
 .link-copy-container svg path {
-  fill: rgb(var(--normal-fg));
+  fill: var(--fg);
 }
 
-.link-copy:hover {
-  color: var(--link-fg);
+.link-copy:hover,
+.link-copy:active {
+  color: var(--link);
   text-decoration: underline;
 }
 
-.link-copy-container .open-external:hover > path {
+.link-copy-container .open-external:hover > path,
+.link-copy-container .open-external:active > path {
   fill: var(--soft-blue);
 }
 
@@ -96,24 +116,25 @@
   width: auto;
 }
 
-.link-copy-container .delete-file:hover > path {
-  fill: var(--error-bg);
+.link-copy-container .delete-file:hover > path, 
+.link-copy-container .delete-file:active > path {
+  fill: var(--error);
 }
 
 #clear-token {
-  color: var(--soft-blue);
+  color: var(--dark-bg);
   position: absolute;
   bottom: 1em;
   right: 1em;
   border-radius: .3em;
-  border: 1px solid var(--soft-blue);
+  background-color: var(--soft-blue);
   padding: .3rem .6em;
   cursor: pointer;
 }
 
-#clear-token:hover {
-  color: rgb(var(--normal-fg));
-  background-color: var(--error-bg);
-  border: 1px solid var(--error-bg);
+#clear-token:hover,
+#clear-token:active {
+  color: var(--fg);
+  background-color: var(--error);
 }
 

@@ -1,10 +1,10 @@
 :root {
   --bg: #3B4252;
-  --card-bg: #2e3440;
-  --green: #a3be8c;
-  --link-fg: #88c0d0;
-  --normal-fg: 216, 222, 233;
-  --error-bg: #bf616a;
+  --dark-bg: #2e3440;
+  --success: #a3be8c;
+  --link: #88c0d0;
+  --fg: #D8DEE9;
+  --error: #bf616a;
   --soft-blue: #81a1c1;
 }
 
@@ -35,13 +35,13 @@ body {
 }
 
 .flash-error {
-  background-color: var(--error-bg);
-  color: rgb(var(--normal-fg));
+  background-color: var(--error);
+  color: var(--fg);
 }
 
 .flash-success {
-  background-color: var(--green);
-  color: var(--card-bg);
+  background-color: var(--success);
+  color: var(--dark-bg);
 }
 
 @keyframes flash {
