@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@554;704&display=swap');
+
 :root {
   --bg: #3B4252;
   --dark-bg: #2e3440;
@@ -6,11 +8,12 @@
   --fg: #D8DEE9;
   --error: #bf616a;
   --soft-blue: #81a1c1;
+  --font: "Raleway", sans-serif;
 }
 
 body {
   background-color: var(--bg);
-  font-family: sans-serif;
+  font-family: var(--font);
   margin: 0;
 }
 
