@@ -7,6 +7,7 @@
   <link rel="stylesheet" type="text/css" href="upload/main.css">
   <script type="text/javascript" src="common/utils.js"></script>
   <script type="text/javascript" src="upload/script.js"></script>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
 </head>
 
 <body onload="load()">
@@ -22,8 +23,10 @@
     </div>
     <div id="token-container" class="container hidden">
       <p>Paste auth token here</p>
-      <input type="password" id="token-input" class="token-input" contenteditable="true" />
-      <input type="button" value="Set" onclick="setToken()" id="submit-token-btn" />
+      <div class="token-input-container">
+        <input type="password" id="token-input" class="token-input" contenteditable="true" />
+        <input type="button" value="&#10140;" onclick="setToken()" id="submit-token-btn" />
+      </div>
     </div>
     <span id="clear-token">&#x2715; clear token</span>
   </div>
