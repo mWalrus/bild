@@ -26,21 +26,21 @@ Visit [the project homepage](https://bild.waalrus.xyz) for installation instruct
 ## URLs
 
 ### Unauthenticated
-- `GET www.<your_domain>.xyz/<file_name>`: view uploaded file
+- `GET www.<your_domain>.ltd/<file_name>`: view uploaded file
 
 ### Authentication required
 
 #### Web interfaces
-- `www.<your_domain>.xyz/upload`: upload form
-- `www.<your_domain>.xyz/delete/<file_name>`: file deletion form
+- `www.<your_domain>.ltd/upload`: upload form
+- `www.<your_domain>.ltd/delete/<file_name>`: file deletion form
 
 #### Direct requests
-- `www.<your_domain>.xyz/upload`
+- `www.<your_domain>.ltd/upload`
     - method: `POST`
     - headers:
         - authorization: `Bearer <your_token>`
     - body: `{data: <file>}`
-- `www.<your_domain>.xyz/delete/<file_name>`
+- `www.<your_domain>.ltd/delete/<file_name>`
     - method: `DELETE`
     - headers:
         - authorization: `Bearer <your_token>`
