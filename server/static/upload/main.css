@@ -25,16 +25,16 @@
 
 .input-label {
   cursor: pointer;
-  border: 1px solid var(--fg);
+  background-color: var(--soft-blue);
+  color: var(--bg);
   padding: 1em;
   border-radius: .3em;
 }
 
 .input-label:hover,
 .input-label:active {
-  background-color: var(--soft-blue);
-  border-color: var(--soft-blue);
-  color: var(--bg);
+  background-color: var(--success);
+  border-color: var(--bg);
 }
 
 .token-input-container {
@@ -80,7 +80,7 @@
 }
 
 .link-copy-container {
-  background-color: var(---bg);
+  background-color: var(--dark-bg);
   padding: 1em;
   border-radius: .3em;
   cursor: pointer;
