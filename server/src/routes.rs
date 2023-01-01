@@ -12,7 +12,7 @@ use rocket_governor::RocketGovernor;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-fn get_file_from_path(file: &PathBuf) -> Option<PathBuf> {
+fn evaluate_file_from_path(file: &PathBuf) -> Option<PathBuf> {
     let file_path = Path::new("uploads/").join(file);
     if file_path.extension().is_some() {
         Some(file_path)
@@ -44,7 +44,7 @@ pub fn index() -> Redirect {
 
 #[get("/<file..>")]
 pub async fn file(file: PathBuf) -> Option<NamedFile> {
-    match get_file_from_path(&file) {
+    match evaluate_file_from_path(&file) {
         Some(p) => NamedFile::open(p).await.ok(),
         None => None,
     }
@@ -64,7 +64,7 @@ pub async fn get_delete() -> Option<NamedFile> {
 
 #[delete("/delete/<name>")]
 pub async fn delete_upload(_key: ApiKey<'_>, name: PathBuf) -> status::Custom<Value> {
-    let res = match get_file_from_path(&name) {
+    let res = match evaluate_file_from_path(&name) {
         Some(path) => fs::remove_file(path),
         None => return status::Custom(Status::NotFound, json!({"message": "No such file"})),
     };
