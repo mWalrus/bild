@@ -19,17 +19,14 @@ pub enum ConversionError {
     AWebPEncoder(#[from] webp_animation::Error),
     #[error("Failed to find parent directory for {0}")]
     ParentNotFound(PathBuf),
-    #[error("Failed to convert video file")]
-    Ffmpeg,
 }
 
 pub struct FileData<'a> {
     pub data: &'a [u8],
-    pub file_type: FileType<'a>,
+    pub file_type: FileType,
 }
 
-pub enum FileType<'a> {
+pub enum FileType {
     Image,
     Gif,
-    Video(&'a str),
 }

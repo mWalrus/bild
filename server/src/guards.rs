@@ -51,32 +51,31 @@ impl<'r> FromFormField<'r> for FileData<'r> {
         let is_video = infer::is_video(peeked);
         let is_image = infer::is_image(peeked);
 
+        if is_video || !is_image {
+            Err(form::Error::validation(
+                *field
+                    .request
+                    .local_cache(|| "Upload is neither an image nor a gif"),
+            ))?;
+        }
+
         let limit = field
             .request
             .limits()
             .get("upload/image")
             .unwrap_or_else(|| 20.mebibytes()); // defaults
 
-        if !is_video && !is_image {
-            Err(form::Error::validation(
-                *field
-                    .request
-                    .local_cache(|| "upload is neither a video or an image"),
-            ))?;
-        }
         let mime_type = match infer::get(peeked) {
             Some(t) => t.mime_type(),
             None => Err(form::Error::validation(
                 *field
                     .request
-                    .local_cache(|| "could not determine mime type of file"),
+                    .local_cache(|| "Could not determine mime type of file"),
             ))?,
         };
 
         let file_type = if is_image && mime_type == "image/gif" {
             FileType::Gif
-        } else if is_video {
-            FileType::Video(mime_type)
         } else {
             FileType::Image
         };
@@ -90,7 +89,7 @@ impl<'r> FromFormField<'r> for FileData<'r> {
 
         if !capped_bytes.is_complete() {
             Err(form::Error::validation(
-                *field.request.local_cache(|| "file too large"),
+                *field.request.local_cache(|| "File too large"),
             ))?;
         }
 
