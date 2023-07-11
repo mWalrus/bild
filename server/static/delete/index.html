@@ -12,7 +12,7 @@
     }
 
     .hint {
-      color: rgb(var(--normal-fg));
+      color: var(--fg);
       padding: 1em 0;
       display: none;
     }
@@ -22,21 +22,21 @@
     }
 
     .enabled {
-      border: 1px solid rgb(var(--normal-fg));
-      color: rgb(var(--normal-fg));
+      background-color: var(--soft-blue);
+      color: var(--dark-bg);
       cursor: pointer;
     }
 
     .disabled {
       background-color: #5F6D87;
-      border-color: #5F6D87;
-      color: rgb(var(--normal-fg));
+      color: var(--fg);
       cursor: normal;
     }
 
     #delete-button.enabled:hover {
-      background-color: var(--error-bg);
-      border-color: var(--error-bg);
+      background-color: var(--error);
+      border-color: var(--error);
+      color: var(--fg);
     }
   </style>
   <script type="text/javascript" src="/common/utils.js"></script>
