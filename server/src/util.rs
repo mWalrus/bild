@@ -1,9 +1,10 @@
-use std::path::{Path, PathBuf};
-
 use rand::distributions::Alphanumeric;
 use rand::{thread_rng, Rng};
+use rocket::serde::json::{json, Value};
+use std::path::{Path, PathBuf};
+use std::{fs, io};
 
-use crate::UPLOADS_DIR;
+use crate::{SERVER_URL, UPLOADS_DIR};
 
 pub fn file_name() -> String {
     let get_name = || {
@@ -31,4 +32,18 @@ pub fn evaluate_file_from_path(file: &PathBuf) -> Option<PathBuf> {
     } else {
         None
     }
+}
+
+pub fn get_upload_history() -> Result<Vec<Value>, io::Error> {
+    let mut history = Vec::new();
+    for entry in fs::read_dir("uploads/")? {
+        let e = entry?;
+        let file_name = e.file_name().to_str().unwrap().replace(".webp", "");
+
+        history.push(json!({
+            "link": format!("{}/{}", *SERVER_URL, file_name),
+            "deleteLink": format!("{}/delete/{}", *SERVER_URL, file_name)
+        }))
+    }
+    Ok(history)
 }

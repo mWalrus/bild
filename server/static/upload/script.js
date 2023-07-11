@@ -86,6 +86,32 @@ async function inputHandler(e) {
   handleFile(file)
 }
 
+async function loadHistory() {
+  const token = window.localStorage.getItem(TOKEN_KEY)
+  console.log(token)
+
+  const res = await fetch('/history', {
+    method: 'GET',
+    headers: {
+      authorization: `Bearer ${token}`
+    },
+    cache: 'no-cache'
+  })
+
+  const json = await res.json();  
+
+  if (res.status === 200) {
+    for (const link of json.history) {
+      let linkElement = createLinkElement(link)
+      let linkContainer = document.getElementById('link-container')
+      linkContainer.appendChild(linkElement)
+    }
+  } else {
+    displayMsg(json.message)
+  }
+}
+
+
 async function handleFile(file) {
   try {
     let links = await uploadFile(file)

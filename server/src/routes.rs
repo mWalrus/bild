@@ -37,6 +37,17 @@ pub async fn file(file: PathBuf) -> Option<NamedFile> {
     }
 }
 
+#[get("/history")]
+pub async fn history(_key: ApiKey<'_>) -> status::Custom<Value> {
+    match util::get_upload_history() {
+        Ok(history) => status::Custom(Status::Ok, json!({ "history": history })),
+        Err(e) => status::Custom(
+            Status::InternalServerError,
+            json!({ "message": format!("{e}") }),
+        ),
+    }
+}
+
 #[post("/token-validation")]
 pub async fn token_validation(_key: ApiKey<'_>) -> status::Accepted<()> {
     status::Accepted::<()>(None)
