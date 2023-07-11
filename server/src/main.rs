@@ -3,10 +3,10 @@ extern crate rocket;
 mod converter;
 mod fairings;
 mod garbage;
-mod gen;
 mod guards;
 mod routes;
 mod types;
+mod util;
 
 use fairings::CORS;
 use lazy_static::lazy_static;
