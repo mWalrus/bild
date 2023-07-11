@@ -1,12 +1,14 @@
 #[macro_use]
 extern crate rocket;
 mod converter;
+mod fairings;
 mod garbage;
 mod gen;
 mod guards;
 mod routes;
 mod types;
 
+use fairings::CORS;
 use lazy_static::lazy_static;
 use rocket::data::{Limits, ToByteUnit};
 use rocket::fs::FileServer;
@@ -48,6 +50,7 @@ fn rocket() -> _ {
     };
 
     rocket::custom(config)
+        .attach(CORS)
         .register("/", catchers![not_found, default])
         .mount(
             "/",
