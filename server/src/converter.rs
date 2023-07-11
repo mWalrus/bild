@@ -1,5 +1,5 @@
 use crate::types::ConversionError;
-use crate::{gen, UPLOADS_DIR};
+use crate::{util, UPLOADS_DIR};
 use image::codecs::gif::GifDecoder;
 use image::io::Reader;
 use image::{AnimationDecoder, ImageDecoder};
@@ -25,7 +25,7 @@ pub fn image_to_webp(bytes: &[u8]) -> Result<String, ConversionError> {
     let encoded_webp: WebPMemory = encoder.unwrap().encode(90f32);
 
     // Generate a unique file name for the new converted file
-    let webp_file_name = gen::file_name();
+    let webp_file_name = util::file_name();
 
     // Put webp-image in a separate webp-folder in the location of the original
     let webp_file_path: PathBuf = PathBuf::from(UPLOADS_DIR).join(&webp_file_name);
@@ -83,7 +83,7 @@ pub fn gif_to_webp(bytes: &[u8]) -> Result<String, ConversionError> {
     let webp_data = encoder
         .finalize(final_timestamp)
         .map_err(ConversionError::AWebPEncoder)?;
-    let new_webp_file_name = gen::file_name();
+    let new_webp_file_name = util::file_name();
     let output = format!("{UPLOADS_DIR}/{new_webp_file_name}.webp");
 
     std::fs::write(output, webp_data).map_err(ConversionError::IO)?;

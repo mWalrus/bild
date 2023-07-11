@@ -1,7 +1,7 @@
-use crate::converter;
 use crate::guards::{ApiKey, RateLimitGuard};
 use crate::types::{FileData, FileType};
 use crate::SERVER_URL;
+use crate::{converter, util};
 use rocket::form::Form;
 use rocket::fs::NamedFile;
 use rocket::http::Status;
@@ -10,20 +10,7 @@ use rocket::serde::json::{json, Value};
 use rocket::Request;
 use rocket_governor::RocketGovernor;
 use std::fs;
-use std::path::{Path, PathBuf};
-
-fn evaluate_file_from_path(file: &PathBuf) -> Option<PathBuf> {
-    let file_path = Path::new("uploads/").join(file);
-    if file_path.extension().is_some() {
-        Some(file_path)
-    } else if file_path.with_extension("webp").exists() {
-        Some(file_path.with_extension("webp"))
-    } else if file_path.with_extension("mp4").exists() {
-        Some(file_path.with_extension("mp4"))
-    } else {
-        None
-    }
-}
+use std::path::PathBuf;
 
 #[catch(404)]
 pub fn not_found() -> Redirect {
@@ -44,7 +31,7 @@ pub fn index() -> Redirect {
 
 #[get("/<file..>")]
 pub async fn file(file: PathBuf) -> Option<NamedFile> {
-    match evaluate_file_from_path(&file) {
+    match util::evaluate_file_from_path(&file) {
         Some(p) => NamedFile::open(p).await.ok(),
         None => None,
     }
@@ -64,7 +51,7 @@ pub async fn get_delete() -> Option<NamedFile> {
 
 #[delete("/delete/<name>")]
 pub async fn delete_upload(_key: ApiKey<'_>, name: PathBuf) -> status::Custom<Value> {
-    let res = match evaluate_file_from_path(&name) {
+    let res = match util::evaluate_file_from_path(&name) {
         Some(path) => fs::remove_file(path),
         None => return status::Custom(Status::NotFound, json!({"message": "No such file"})),
     };
