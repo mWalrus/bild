@@ -39,7 +39,7 @@ fn main() -> Result<(), io::Error> {
 
     let args: Vec<String> = std::env::args().collect();
 
-    if &args[1] == "-t" {
+    if args.len() > 1 && &args[1] == "-t" {
         println!("{}", auth.token);
         std::process::exit(0);
     }
@@ -48,7 +48,7 @@ fn main() -> Result<(), io::Error> {
 
     println!(
         "{}\n{header}",
-        "Authorization header has been generated, paste this in chatterino:"
+        "Authorization header has been generated:"
             .bright_green()
             .bold()
     );
