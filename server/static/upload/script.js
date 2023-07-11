@@ -187,30 +187,40 @@ function createLinkElement(links) {
   let fileName = link.slice(link.lastIndexOf('/') + 1)
   container.id = fileName
 
-  let span = document.createElement('span')
-  span.classList.add('link-copy')
-  span.innerText = link
+  let img = document.createElement('img')
+  img.classList.add('thumbnail')
+  img.src = link
+  img.title = 'Open in new tab'
+  img.addEventListener('click', () => {
+    window.open(link, '_blank')
+  })
+
+  let p = document.createElement('p')
+  p.classList.add('link-copy')
+  p.innerText = link
+  p.title = 'Copy to clipboard'
   
-  span.addEventListener('click', () => {
+  p.addEventListener('click', () => {
     navigator.clipboard.writeText(link)
     displayMsg('Copied link to clipboard', true)
   })
   
   
-  let open_svg = createSvg([SVG_PATH_OPEN_LINK])
+  let open_svg = createSvg([SVG_PATH_OPEN_LINK], 'Open in new tab')
   open_svg.classList.add('open-external')
   open_svg.addEventListener('click', () => {
     window.open(link, '_blank')
   })
 
-  let delete_svg = createSvg([SVG_PATH_TRASH_OUTER, SVG_PATH_TRASH_INNER])
+  let delete_svg = createSvg([SVG_PATH_TRASH_OUTER, SVG_PATH_TRASH_INNER], 'Delete file')
   delete_svg.classList.add('delete-file')
   delete_svg.addEventListener('click', () => {
     deleteFile(deleteLink)
     container.style.display = 'none'
   })
-  
-  container.appendChild(span)
+
+  container.appendChild(img)
+  container.appendChild(p)
   container.appendChild(open_svg)
   container.appendChild(delete_svg)
   
