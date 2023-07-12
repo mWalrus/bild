@@ -79,7 +79,6 @@
 }
 
 .link-copy-container {
-  box-sizing: content-box;
   background-color: var(--dark-bg);
   padding: 1em;
   border-radius: .3em;
@@ -89,10 +88,14 @@
   min-width: 0;
 }
 
+.link-copy-container > * {
+  box-sizing: border-box;
+}
+
 .link-copy-container .thumbnail {
   object-fit: cover;
   border-radius: .3em;
-  width: 100px;
+  width: 90%;
   height: 100px;
   grid-area: thumb;
   cursor: pointer;
