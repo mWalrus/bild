@@ -88,7 +88,6 @@ async function inputHandler(e) {
 
 async function loadHistory() {
   const token = window.localStorage.getItem(TOKEN_KEY)
-  console.log(token)
 
   const res = await fetch('/history', {
     method: 'GET',
@@ -103,12 +102,30 @@ async function loadHistory() {
   if (res.status === 200) {
     for (const link of json.history) {
       let linkElement = createLinkElement(link)
+      // we can use this to remove all history elements when the user decides
+      linkElement.classList.add('history-upload')
+
       let linkContainer = document.getElementById('link-container')
       linkContainer.appendChild(linkElement)
     }
+
+    document.getElementById('history').classList.add('hidden')
+    document.getElementById('hide-history').classList.remove('hidden')
   } else {
     displayMsg(json.message)
   }
+}
+
+async function hideHistory() {
+  const linkContainer = document.getElementById('link-container')
+  const children = [...linkContainer.children]
+  for (const child of children) {
+    if (child.classList.contains('history-upload')) {
+      linkContainer.removeChild(child)
+    }
+  }
+  document.getElementById('history').classList.remove('hidden')
+  document.getElementById('hide-history').classList.add('hidden')
 }
 
 
@@ -187,20 +204,30 @@ function createLinkElement(links) {
   let fileName = link.slice(link.lastIndexOf('/') + 1)
   container.id = fileName
 
-  let img = document.createElement('img')
-  img.classList.add('thumbnail')
-  img.src = link
-  img.title = 'Open in new tab'
-  img.addEventListener('click', () => {
+  let tmp = document.getElementsByTagName('template')[0]
+  let linkContainer = tmp.content.cloneNode(true)
+  console.log(linkContainer)
+  let div = linkContainer.children[0]
+  console.log(div)
+  let children = div.children
+  console.log(children)
+
+  let imgTag = children[0]
+  let linkTag = children[1]
+
+  // TODO: update these when we have the history metadata implemented
+  let dimTag = children[2]
+  let sizeTag = children[3]
+  let uploadedTag = children[4]
+
+  imgTag.src = link
+  imgTag.addEventListener('click', () => {
     window.open(link, '_blank')
   })
 
-  let p = document.createElement('p')
-  p.classList.add('link-copy')
-  p.innerText = link
-  p.title = 'Copy to clipboard'
+  linkTag.innerText = link
   
-  p.addEventListener('click', () => {
+  linkTag.addEventListener('click', () => {
     navigator.clipboard.writeText(link)
     displayMsg('Copied link to clipboard', true)
   })
@@ -216,14 +243,12 @@ function createLinkElement(links) {
   delete_svg.classList.add('delete-file')
   delete_svg.addEventListener('click', () => {
     deleteFile(deleteLink)
-    container.style.display = 'none'
+    linkContainer.style.display = 'none'
   })
 
-  container.appendChild(img)
-  container.appendChild(p)
-  container.appendChild(open_svg)
-  container.appendChild(delete_svg)
-  
-  return container
+  div.appendChild(open_svg)
+  div.appendChild(delete_svg)
+
+  return div
 }
 

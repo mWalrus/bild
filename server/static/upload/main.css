@@ -87,13 +87,19 @@
   padding: 1em;
   border-radius: .3em;
   display: grid;
-  grid-template-areas: 'thumb link link link' 'thumb empty open delete';
+  grid-template-areas:
+    'thumb link link link'
+    'thumb size size size' 
+    'thumb dims dims dims' 
+    'thumb time time time' 
+    'thumb empty open delete';
   grid-template-columns: 30% 50% 10% 10%;
   min-width: 0;
 }
 
 .link-copy-container > * {
   box-sizing: border-box;
+  font-family: monospace;
 }
 
 .link-copy-container .thumbnail {
@@ -106,10 +112,22 @@
 }
 
 .link-copy-container .link-copy {
-  font-family: monospace;
-  font-size: 1.2em;
+  font-family: 'sans-serif';
+  font-size: 1em;
   grid-area: link;
   cursor: pointer;
+}
+
+.link-copy-container .size {
+  grid-area: size;
+}
+
+.link-copy-container .dims {
+  grid-area: dims;
+}
+
+.link-copy-container .time {
+  grid-area: time;
 }
 
 .link-copy-container .open-external {
@@ -168,11 +186,11 @@
   background-color: var(--error);
 }
 
-#history {
+.history {
   text-decoration: underline;
 }
 
-#history:hover {
+.history:hover {
   color: var(--soft-blue);
   cursor: pointer;
 }
