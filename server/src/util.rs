@@ -35,14 +35,25 @@ pub fn evaluate_file_from_path(file: &PathBuf) -> Option<PathBuf> {
 }
 
 pub fn get_upload_history() -> Result<Vec<Value>, io::Error> {
-    let mut history = Vec::new();
+    let mut data = Vec::new();
     for entry in fs::read_dir("uploads/")? {
         let e = entry?;
         let file_name = e.file_name().to_str().unwrap().replace(".webp", "");
+        let metadata = e.metadata()?;
+        let size = metadata.len();
+        let created = metadata.created().unwrap();
+        data.push((file_name, size, created));
+    }
 
+    data.sort_unstable_by_key(|(_, _, c)| c.elapsed().unwrap().as_millis());
+
+    let mut history = Vec::new();
+    for (name, size, created) in data {
         history.push(json!({
-            "link": format!("{}/{}", *SERVER_URL, file_name),
-            "deleteLink": format!("{}/delete/{}", *SERVER_URL, file_name)
+            "link": format!("{}/{}", *SERVER_URL, name),
+            "deleteLink": format!("{}/delete/{}", *SERVER_URL, name),
+            "size": size,
+            "created": created
         }))
     }
     Ok(history)

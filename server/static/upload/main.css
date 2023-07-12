@@ -89,11 +89,10 @@
   display: grid;
   grid-template-areas:
     'thumb link link link'
-    'thumb size size size' 
-    'thumb dims dims dims' 
-    'thumb time time time' 
+    'thumb metadata metadata metadata' 
     'thumb empty open delete';
   grid-template-columns: 30% 50% 10% 10%;
+  grid-template-rows: 1fr 2fr 3fr;
   min-width: 0;
 }
 
@@ -106,7 +105,7 @@
   object-fit: cover;
   border-radius: .3em;
   width: 90%;
-  height: 100px;
+  height: 10em;
   grid-area: thumb;
   cursor: pointer;
 }
@@ -118,16 +117,8 @@
   cursor: pointer;
 }
 
-.link-copy-container .size {
-  grid-area: size;
-}
-
-.link-copy-container .dims {
-  grid-area: dims;
-}
-
-.link-copy-container .time {
-  grid-area: time;
+.link-copy-container .metadata {
+  grid-area: metadata;
 }
 
 .link-copy-container .open-external {
