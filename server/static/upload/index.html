@@ -20,7 +20,8 @@
         Choose files
       </label>
       <div id="link-container"></div>
-      <span id="history" onclick="loadHistory()">history</span>
+      <span id="history" class="history" onclick="loadHistory()">history</span>
+      <span id="hide-history" class="history hidden" onclick="hideHistory()">hide history</span>
     </div>
     <div id="token-container" class="container hidden">
       <p>Paste auth token here</p>
@@ -31,6 +32,15 @@
     </div>
     <span id="clear-token">&#x2715; Clear token</span>
   </div>
+  <template>
+    <div class="link-copy-container">
+      <img class="thumbnail" title="Open in new tab">
+      <span class="link-copy" title="Copy to clipboard"></span>
+      <span class="dims">Dims: 600x600</span>
+      <span class="size">Size: 250kB</span>
+      <span class="time">Uploaded: 2023-07-12</span>
+    </div>
+  </template>
 </body>
 
 </html>
