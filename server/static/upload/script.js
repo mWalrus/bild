@@ -100,12 +100,16 @@ async function loadHistory() {
   const json = await res.json();  
 
   if (res.status === 200) {
+    let linkContainer = document.getElementById('link-container')
+    // hide all potential uploads already visible in the upload list
+    for (const child of linkContainer.children) {
+      child.classList.add('hidden')
+    }
+
     for (const link of json.history) {
       let linkElement = createLinkElement(link)
       // we can use this to remove all history elements when the user decides
       linkElement.classList.add('history-upload')
-
-      let linkContainer = document.getElementById('link-container')
       linkContainer.appendChild(linkElement)
     }
 
@@ -124,6 +128,12 @@ async function hideHistory() {
       linkContainer.removeChild(child)
     }
   }
+
+  // unhide all potentially hidden uploads from before
+  for (const child of linkContainer.children) {
+    child.classList.remove('hidden')
+  }
+
   document.getElementById('history').classList.remove('hidden')
   document.getElementById('hide-history').classList.add('hidden')
 }
