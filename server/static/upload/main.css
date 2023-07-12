@@ -4,7 +4,10 @@
 
 .hidden {
   visibility: hidden;
+  display: none !important;
   height: 0;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .container {
