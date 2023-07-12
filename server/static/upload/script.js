@@ -255,7 +255,7 @@ function createLinkElement(links) {
   delete_svg.classList.add('delete-file')
   delete_svg.addEventListener('click', () => {
     deleteFile(deleteLink)
-    linkContainer.style.display = 'none'
+    div.style.display = 'none'
   })
 
   div.appendChild(open_svg)
