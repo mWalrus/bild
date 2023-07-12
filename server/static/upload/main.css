@@ -13,6 +13,8 @@
   flex-direction: column;
   gap: 1em;
   align-items: center;
+  overflow: hidden;
+  padding: 1em;
 }
 
 .container p {
@@ -73,9 +75,11 @@
 }
 
 #link-container {
+  width: 30em;
   display: flex;
   flex-direction: column;
   gap: 1em;
+  overflow-y: scroll;
 }
 
 .link-copy-container {
