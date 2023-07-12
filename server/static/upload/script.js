@@ -213,8 +213,8 @@ function createLinkElement(links) {
   let fileName = link.slice(link.lastIndexOf('/') + 1)
   container.id = fileName
 
-  let tmp = document.getElementsByTagName('template')[0]
-  let linkContainer = tmp.content.cloneNode(true)
+  let templates = document.getElementsByTagName('template')
+  let linkContainer = templates[0].content.cloneNode(true)
   let div = linkContainer.children[0]
   let children = div.children
 
@@ -245,21 +245,22 @@ function createLinkElement(links) {
   uploadedTag.innerText += humanDate(created)
   
   
-  let open_svg = createSvg([SVG_PATH_OPEN_LINK], 'Open in new tab')
-  open_svg.classList.add('open-external')
-  open_svg.addEventListener('click', () => {
+  let copySVG = children[3]
+  copySVG.addEventListener('click', () => {
+    navigator.clipboard.writeText(link)
+    displayMsg('Copied link to clipboard', true)
+  })
+
+  let openSVG = children[4]
+  openSVG.addEventListener('click', () => {
     window.open(link, '_blank')
   })
 
-  let delete_svg = createSvg([SVG_PATH_TRASH_OUTER, SVG_PATH_TRASH_INNER], 'Delete file')
-  delete_svg.classList.add('delete-file')
-  delete_svg.addEventListener('click', () => {
+  let deleteSVG = children[5]
+  deleteSVG.addEventListener('click', () => {
     deleteFile(deleteLink)
     div.style.display = 'none'
   })
-
-  div.appendChild(open_svg)
-  div.appendChild(delete_svg)
 
   return div
 }
