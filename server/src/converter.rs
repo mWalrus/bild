@@ -4,11 +4,12 @@ use image::codecs::gif::GifDecoder;
 use image::io::Reader;
 use image::{AnimationDecoder, ImageDecoder};
 use std::io::Cursor;
+use std::time::SystemTime;
 use std::{fs::File, io::Write, path::PathBuf};
 use webp::{Encoder, WebPMemory};
 use webp_animation::Encoder as AWebPEncoder;
 
-pub fn image_to_webp(bytes: &[u8]) -> Result<String, ConversionError> {
+pub fn image_to_webp(bytes: &[u8]) -> Result<(String, usize, SystemTime), ConversionError> {
     let image = Reader::new(Cursor::new(bytes));
 
     let guessed_format = image.with_guessed_format().map_err(ConversionError::IO)?;
@@ -45,10 +46,10 @@ pub fn image_to_webp(bytes: &[u8]) -> Result<String, ConversionError> {
     webp_image
         .write_all(&encoded_webp)
         .map_err(ConversionError::IO)?;
-    Ok(webp_file_name)
+    Ok((webp_file_name, encoded_webp.len(), SystemTime::now()))
 }
 
-pub fn gif_to_webp(bytes: &[u8]) -> Result<String, ConversionError> {
+pub fn gif_to_webp(bytes: &[u8]) -> Result<(String, usize, SystemTime), ConversionError> {
     // https://github.com/blaind/webp-animation/blob/main/examples/encode_animation.rs
     // https://docs.rs/webp/latest/webp/struct.Encoder.html
     // https://docs.rs/image/latest/image/codecs/gif/index.html
@@ -86,7 +87,7 @@ pub fn gif_to_webp(bytes: &[u8]) -> Result<String, ConversionError> {
     let new_webp_file_name = util::file_name();
     let output = format!("{UPLOADS_DIR}/{new_webp_file_name}.webp");
 
-    std::fs::write(output, webp_data).map_err(ConversionError::IO)?;
+    std::fs::write(output, &webp_data).map_err(ConversionError::IO)?;
 
-    Ok(new_webp_file_name)
+    Ok((new_webp_file_name, webp_data.len(), SystemTime::now()))
 }

@@ -93,8 +93,8 @@ pub async fn upload(
         FileType::Image => converter::image_to_webp(bytes),
     };
 
-    let file_name = match conversion {
-        Ok(file_name) => file_name,
+    let (name, size, created_at) = match conversion {
+        Ok(file_info) => file_info,
         Err(e) => {
             return status::Custom(
                 Status::InternalServerError,
@@ -103,14 +103,13 @@ pub async fn upload(
         }
     };
 
-    let link = format!("{}/{}", *SERVER_URL, file_name);
-    let delete_link = format!("{}/delete/{}", *SERVER_URL, file_name);
-
     status::Custom(
         Status::Ok,
         json!({
-            "link": link,
-            "delete_link": delete_link
+            "link": format!("{}/{}", *SERVER_URL, name),
+            "delete_link": format!("{}/delete/{}", *SERVER_URL, name),
+            "size": size,
+            "created": created_at
         }),
     )
 }

@@ -166,11 +166,11 @@ function uploadFile(file) {
           }
 
           let response = JSON.parse(xhr.responseText)
-          const { link, delete_link } = response 
+          const { link, delete_link, size, created } = response 
           if (!link || !delete_link) {
             throw new Error(response.message ?? 'Unknown error when uploading')
           }
-          resolve({link, deleteLink: delete_link})
+          resolve({link, deleteLink: delete_link, size, created})
         } catch (e) {
           reject(e)
         }    
@@ -195,8 +195,7 @@ function uploadFile(file) {
 }
 
 function createLinkElement(links) {
-  const {link, deleteLink} = links
-
+  const {link, deleteLink, size, created} = links
   
   let container = document.createElement('div')
   container.classList.add('link-copy-container')
@@ -206,24 +205,24 @@ function createLinkElement(links) {
 
   let tmp = document.getElementsByTagName('template')[0]
   let linkContainer = tmp.content.cloneNode(true)
-  console.log(linkContainer)
   let div = linkContainer.children[0]
-  console.log(div)
   let children = div.children
-  console.log(children)
 
   let imgTag = children[0]
   let linkTag = children[1]
 
   // TODO: update these when we have the history metadata implemented
-  let dimTag = children[2]
-  let sizeTag = children[3]
-  let uploadedTag = children[4]
+  let dimsTag = children[2].children[0]
+  let sizeTag = children[2].children[1]
+  let uploadedTag = children[2].children[2]
 
   imgTag.src = link
   imgTag.addEventListener('click', () => {
     window.open(link, '_blank')
   })
+
+  // perfect solution
+  imgTag.onload = () => dimsTag.innerText += ` ${imgTag.naturalWidth}x${imgTag.naturalHeight}`
 
   linkTag.innerText = link
   
@@ -231,6 +230,9 @@ function createLinkElement(links) {
     navigator.clipboard.writeText(link)
     displayMsg('Copied link to clipboard', true)
   })
+
+  sizeTag.innerText += humanSize(size)
+  uploadedTag.innerText += humanDate(created)
   
   
   let open_svg = createSvg([SVG_PATH_OPEN_LINK], 'Open in new tab')
@@ -250,5 +252,19 @@ function createLinkElement(links) {
   div.appendChild(delete_svg)
 
   return div
+}
+
+function humanSize(bytes) {
+  if (bytes < 1024) {
+    return bytes + "B"
+  } else if (bytes < 1024 * 1024) {
+    return (bytes / 1024).toFixed(1) + "kB"
+  } else {
+    return (bytes / 1024 / 1024).toFixed(1) + "mB"
+  }
+}
+
+function humanDate(d) {
+  return new Date(d.secs_since_epoch * 1000).toDateString()
 }
 
