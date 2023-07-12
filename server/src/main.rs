@@ -27,7 +27,7 @@ lazy_static! {
     pub static ref SERVER_URL: String = bild_env!("ROCKET_SERVER_URL", "http://localhost:1337");
     pub static ref UPLOAD_MAX_AGE: Duration = {
         let num_weeks: u64 = bild_env!("ROCKET_FILE_AGE_WEEKS", "2").parse().unwrap();
-        Duration::new(60 * 60 * 24 * 7 * num_weeks, 0)
+        Duration::from_secs(60 * 60 * 24 * 7 * num_weeks)
     };
     pub static ref GARBAGE_COLLECTOR: bool = bild_env!("ROCKET_GARBAGE_COLLECTOR", "1") == "1";
     pub static ref UPLOAD_MAX_SIZE: u8 = bild_env!("ROCKET_UPLOAD_MAX_SIZE", "20").parse().unwrap();
