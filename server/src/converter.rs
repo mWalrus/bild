@@ -1,4 +1,5 @@
 use crate::types::ConversionError;
+use crate::util::FrameHelpers;
 use crate::{util, UPLOADS_DIR};
 use image::codecs::gif::GifDecoder;
 use image::io::Reader;
@@ -62,27 +63,21 @@ pub fn gif_to_webp(bytes: &[u8]) -> Result<(String, usize, SystemTime), Conversi
 
     let mut encoder = AWebPEncoder::new((w, h)).map_err(ConversionError::AWebPEncoder)?;
 
-    let mut total_time_ms = 0i32;
-    frames.iter().for_each(|f| {
-        let (n, d) = f.delay().numer_denom_ms();
-        let d = n.checked_div(d).unwrap_or(0);
-        total_time_ms += d as i32;
-    });
+    let mut timestamp = 0i32;
+    let mut timestamps = Vec::with_capacity(frames.len());
+    for frame in frames.iter() {
+        timestamps.push(timestamp);
+        timestamp += frame.delay_to_ms();
+    }
 
-    let frame_ms = (total_time_ms as f32 / frames.len() as f32) as i32;
-    for (i, frame) in frames.iter().enumerate() {
-        let frame_buffer = frame.buffer();
-        // FIXME: this encodes each frame with same delay
-        //        while gif might have differing delays.
+    for (frame, timestamp) in frames.iter().zip(timestamps) {
         encoder
-            .add_frame(frame_buffer, (i as i32 * frame_ms) as i32)
+            .add_frame(frame.buffer(), timestamp)
             .map_err(ConversionError::AWebPEncoder)?;
     }
 
-    let final_timestamp = (frames.len() as i32 * frame_ms) as i32;
-
     let webp_data = encoder
-        .finalize(final_timestamp)
+        .finalize(timestamp)
         .map_err(ConversionError::AWebPEncoder)?;
     let new_webp_file_name = util::generate_file_name();
     let output = format!("{UPLOADS_DIR}/{new_webp_file_name}.webp");

@@ -1,3 +1,4 @@
+use image::Frame;
 use rand::distributions::Alphanumeric;
 use rand::{thread_rng, Rng};
 use rocket::serde::json::{json, Value};
@@ -55,4 +56,15 @@ pub fn get_upload_history() -> Result<Vec<Value>, io::Error> {
         }))
     }
     Ok(history)
+}
+
+pub trait FrameHelpers {
+    fn delay_to_ms(&self) -> i32;
+}
+
+impl FrameHelpers for Frame {
+    fn delay_to_ms(&self) -> i32 {
+        let (n, d) = self.delay().numer_denom_ms();
+        n.checked_div(d).unwrap_or(0) as i32
+    }
 }
