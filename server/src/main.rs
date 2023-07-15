@@ -33,7 +33,7 @@ lazy_static! {
     pub static ref UPLOAD_MAX_SIZE: u8 = bild_env!("ROCKET_UPLOAD_MAX_SIZE", "20").parse().unwrap();
 }
 
-pub static UPLOADS_DIR: &str = "uploads/";
+pub static UPLOADS_DIR: &str = "./uploads/";
 
 #[launch]
 fn rocket() -> _ {

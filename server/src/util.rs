@@ -6,7 +6,7 @@ use std::{fs, io};
 
 use crate::{SERVER_URL, UPLOADS_DIR};
 
-pub fn file_name() -> String {
+pub fn generate_file_name() -> String {
     let get_name = || {
         thread_rng()
             .sample_iter(Alphanumeric)
@@ -27,8 +27,6 @@ pub fn evaluate_file_from_path(file: &PathBuf) -> Option<PathBuf> {
         Some(file_path)
     } else if file_path.with_extension("webp").exists() {
         Some(file_path.with_extension("webp"))
-    } else if file_path.with_extension("mp4").exists() {
-        Some(file_path.with_extension("mp4"))
     } else {
         None
     }
@@ -36,7 +34,7 @@ pub fn evaluate_file_from_path(file: &PathBuf) -> Option<PathBuf> {
 
 pub fn get_upload_history() -> Result<Vec<Value>, io::Error> {
     let mut data = Vec::new();
-    for entry in fs::read_dir("uploads/")? {
+    for entry in fs::read_dir(UPLOADS_DIR)? {
         let e = entry?;
         let file_name = e.file_name().to_str().unwrap().replace(".webp", "");
         let metadata = e.metadata()?;

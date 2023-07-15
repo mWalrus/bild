@@ -221,10 +221,10 @@ function createLinkElement(links) {
   let imgTag = children[0]
   let linkTag = children[1]
 
-  // TODO: update these when we have the history metadata implemented
-  let dimsTag = children[2].children[0]
-  let sizeTag = children[2].children[1]
-  let uploadedTag = children[2].children[2]
+  const metadataContainer = children[2]
+  let dimsTag = metadataContainer.children[0]
+  let sizeTag = metadataContainer.children[1]
+  let uploadedTag = metadataContainer.children[2]
 
   imgTag.src = link
   imgTag.addEventListener('click', () => {

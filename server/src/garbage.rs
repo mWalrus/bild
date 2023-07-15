@@ -1,7 +1,7 @@
 use std::time::Duration;
 use std::{fs, thread};
 
-use crate::UPLOAD_MAX_AGE;
+use crate::{UPLOADS_DIR, UPLOAD_MAX_AGE};
 
 static SLEEP_TIMER: Duration = Duration::new(60 * 60 * 2, 0); // 2 hours
 
@@ -10,7 +10,7 @@ static SLEEP_TIMER: Duration = Duration::new(60 * 60 * 2, 0); // 2 hours
 pub fn run_collector() {
     thread::spawn(move || -> Result<(), std::io::Error> {
         loop {
-            if let Ok(rd) = fs::read_dir("./uploads") {
+            if let Ok(rd) = fs::read_dir(UPLOADS_DIR) {
                 for entry in rd {
                     let entry = entry?;
                     // skip the file if it shouldn't be dealt with.
