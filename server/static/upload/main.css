@@ -181,21 +181,36 @@
   fill: var(--error);
 }
 
-#clear-token {
-  color: var(--dark-bg);
+#bottom-buttons {
   position: absolute;
   bottom: 1em;
   right: 1em;
+  display: flex;
+  gap: 1em;
+}
+
+#bottom-buttons > span {
+  color: var(--dark-bg);
   border-radius: .3em;
   background-color: var(--soft-blue);
   padding: .3rem .6em;
   cursor: pointer;
 }
 
+#home-btn a {
+  color: var(--dark-bg);
+  text-decoration: none;
+  underline: none;
+}
+
 #clear-token:hover,
 #clear-token:active {
   color: var(--fg);
   background-color: var(--error);
+}
+#home-btn:hover,
+#home-btn:active {
+  background-color: var(--success);
 }
 
 .history {

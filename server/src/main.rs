@@ -55,7 +55,7 @@ fn rocket() -> _ {
         .mount(
             "/",
             routes![
-                routes::index,
+                routes::bild_home,
                 routes::upload,
                 routes::file,
                 routes::token_validation,
@@ -69,15 +69,15 @@ fn rocket() -> _ {
             FileServer::from(concat!(env!("CARGO_MANIFEST_DIR"), "/static/favicon")).rank(-6),
         )
         .mount(
+            "/",
+            FileServer::from(concat!(env!("CARGO_MANIFEST_DIR"), "/static/upload")).rank(-4),
+        )
+        .mount(
             "/404",
             FileServer::from(concat!(env!("CARGO_MANIFEST_DIR"), "/static/404")).rank(-2),
         )
         .mount(
             "/common",
             FileServer::from(concat!(env!("CARGO_MANIFEST_DIR"), "/static/common")).rank(-3),
-        )
-        .mount(
-            "/upload",
-            FileServer::from(concat!(env!("CARGO_MANIFEST_DIR"), "/static/upload")).rank(-4),
         )
 }

@@ -24,8 +24,8 @@ pub fn default(status: Status, req: &Request<'_>) -> status::Custom<Value> {
     status::Custom(status, json!({ "message": err_msg }))
 }
 
-#[get("/")]
-pub fn index() -> Redirect {
+#[get("/bild")]
+pub fn bild_home() -> Redirect {
     Redirect::to(uri!("https://bild.waalrus.xyz"))
 }
 
